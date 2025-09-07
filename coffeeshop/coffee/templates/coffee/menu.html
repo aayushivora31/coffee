@@ -1,0 +1,1167 @@
+{% extends 'coffee/base.html' %}
+{% load currency_filters %}
+
+{% block title %}Menu - CoffeeShop{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-coffee text-white py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-3">Our Menu</h1>
+                <p class="lead">Discover our carefully crafted coffee and delicious treats</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Items -->
+{% if featured_items %}
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="text-coffee mb-3">Featured Items</h2>
+            <p class="lead">Our most popular and special selections</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for item in featured_items %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 menu-card">
+                    <div class="position-absolute top-0 start-0 bg-warning text-dark px-2 py-1 rounded-bottom-end" style="z-index: 10;">
+                        <i class="bi bi-star-fill me-1"></i>Featured
+                    </div>
+                    
+                    {% if item.image_url %}
+                    <img src="{{ item.image_url }}" class="card-img-top menu-img" alt="{{ item.name }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="menu-img-placeholder" style="display: none;">
+                        <i class="bi bi-cup-hot fs-1 text-muted"></i>
+                    </div>
+                    {% else %}
+                    <div class="menu-img-placeholder">
+                        <i class="bi bi-cup-hot fs-1 text-muted"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-coffee">{{ item.name }}</h5>
+                        <p class="card-text text-muted small menu-description">{{ item.description|default:"Delicious coffee item prepared with premium ingredients." }}</p>
+                        
+                        <!-- Rating Display -->
+                        {% if item.rating_count > 0 %}
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="stars me-2">
+                                        {% with item.star_display as stars %}
+                                            {% for i in stars.full_stars %}★{% endfor %}
+                                            {% if stars.half_star %}☆{% endif %}
+                                            {% for i in stars.empty_stars %}☆{% endfor %}
+                                        {% endwith %}
+                                    </div>
+                                    <small class="text-muted">({{ item.rating_count }})</small>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="fw-bold text-coffee mb-2 fs-5">{{ currency_symbol }}{{ item.price }}</div>
+                        
+                        <div class="mt-auto">
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-coffee add-to-cart-btn" data-item-id="{{ item.id }}">
+                                    <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                </button>
+                                
+                                <div class="d-flex gap-2">
+                                    {% if user.is_authenticated %}
+                                        <button class="btn btn-outline-danger btn-sm flex-fill wishlist-btn" 
+                                                data-item-id="{{ item.id }}"
+                                                title="Add to wishlist">
+                                            <i class="bi bi-heart"></i>
+                                        </button>
+                                    {% endif %}
+                                    
+                                    <button class="btn btn-outline-info btn-sm flex-fill item-details-btn" 
+                                            data-item-id="{{ item.id }}"
+                                            title="View details & reviews">
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Menu Categories -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="text-coffee mb-3">Full Menu</h2>
+            <p class="lead">Browse our complete selection</p>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-pills justify-content-center mb-5 menu-tabs" id="menuTabs" role="tablist" data-aos="fade-up" data-aos-delay="200">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="coffee-tab" data-bs-toggle="pill" data-bs-target="#coffee" type="button">
+                    <i class="bi bi-cup-hot me-2"></i>Coffee
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="espresso-tab" data-bs-toggle="pill" data-bs-target="#espresso" type="button">
+                    <i class="bi bi-cup-straw me-2"></i>Espresso
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="cold-tab" data-bs-toggle="pill" data-bs-target="#cold" type="button">
+                    <i class="bi bi-snow me-2"></i>Cold Drinks
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pastries-tab" data-bs-toggle="pill" data-bs-target="#pastries" type="button">
+                    <i class="bi bi-cake me-2"></i>Pastries
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="desserts-tab" data-bs-toggle="pill" data-bs-target="#desserts" type="button">
+                    <i class="bi bi-heart me-2"></i>Desserts
+                </button>
+            </li>
+        </ul>
+        
+        <!-- Tab Content -->
+        <div class="tab-content" id="menuTabsContent">
+            <!-- Coffee Tab -->
+            <div class="tab-pane fade show active" id="coffee" role="tabpanel">
+                <div class="row g-4">
+                    {% for item in coffee_items %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 menu-card">
+                            {% if item.is_featured %}
+                            <div class="position-absolute top-0 start-0 bg-warning text-dark px-2 py-1 rounded-bottom-end" style="z-index: 10;">
+                                <i class="bi bi-star-fill me-1"></i>Featured
+                            </div>
+                            {% endif %}
+                            
+                            {% if item.image_url %}
+                            <img src="{{ item.image_url }}" class="card-img-top menu-img" alt="{{ item.name }}">
+                            {% else %}
+                            <div class="menu-img-placeholder">
+                                <i class="bi bi-cup-hot fs-1 text-muted"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-coffee">{{ item.name }}</h5>
+                                <p class="card-text text-muted small menu-description">{{ item.description|default:"Delicious coffee item prepared with premium ingredients." }}</p>
+                                
+                                <!-- Rating Display -->
+                                {% if item.rating_count > 0 %}
+                                    <div class="mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stars me-2">
+                                                {% with item.star_display as stars %}
+                                                    {% for i in stars.full_stars %}★{% endfor %}
+                                                    {% if stars.half_star %}☆{% endif %}
+                                                    {% for i in stars.empty_stars %}☆{% endfor %}
+                                                {% endwith %}
+                                            </div>
+                                            <small class="text-muted">({{ item.rating_count }})</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="fw-bold text-coffee mb-2 fs-5">{{ currency_symbol }}{{ item.price }}</div>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-coffee add-to-cart-btn" data-item-id="{{ item.id }}">
+                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                        </button>
+                                        
+                                        <div class="d-flex gap-2">
+                                            {% if user.is_authenticated %}
+                                                <button class="btn btn-outline-danger btn-sm flex-fill wishlist-btn" 
+                                                        data-item-id="{{ item.id }}"
+                                                        title="Add to wishlist">
+                                                    <i class="bi bi-heart"></i>
+                                                </button>
+                                            {% endif %}
+                                            
+                                            <button class="btn btn-outline-info btn-sm flex-fill item-details-btn" 
+                                                    data-item-id="{{ item.id }}"
+                                                    title="View details & reviews">
+                                                <i class="bi bi-info-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-cup fs-1 text-muted mb-3"></i>
+                        <p class="text-muted">No coffee items available at the moment.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Espresso Tab -->
+            <div class="tab-pane fade" id="espresso" role="tabpanel">
+                <div class="row g-4">
+                    {% for item in espresso_items %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 menu-card">
+                            {% if item.is_featured %}
+                            <div class="position-absolute top-0 start-0 bg-warning text-dark px-2 py-1 rounded-bottom-end" style="z-index: 10;">
+                                <i class="bi bi-star-fill me-1"></i>Featured
+                            </div>
+                            {% endif %}
+                            
+                            {% if item.image_url %}
+                            <img src="{{ item.image_url }}" class="card-img-top menu-img" alt="{{ item.name }}">
+                            {% else %}
+                            <div class="menu-img-placeholder">
+                                <i class="bi bi-cup-straw fs-1 text-muted"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-coffee">{{ item.name }}</h5>
+                                <p class="card-text text-muted small menu-description">{{ item.description|default:"Delicious coffee item prepared with premium ingredients." }}</p>
+                                
+                                <!-- Rating Display -->
+                                {% if item.rating_count > 0 %}
+                                    <div class="mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stars me-2">
+                                                {% with item.star_display as stars %}
+                                                    {% for i in stars.full_stars %}★{% endfor %}
+                                                    {% if stars.half_star %}☆{% endif %}
+                                                    {% for i in stars.empty_stars %}☆{% endfor %}
+                                                {% endwith %}
+                                            </div>
+                                            <small class="text-muted">({{ item.rating_count }})</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="fw-bold text-coffee mb-2 fs-5">{{ currency_symbol }}{{ item.price }}</div>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-coffee add-to-cart-btn" data-item-id="{{ item.id }}">
+                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                        </button>
+                                        
+                                        <div class="d-flex gap-2">
+                                            {% if user.is_authenticated %}
+                                                <button class="btn btn-outline-danger btn-sm flex-fill wishlist-btn" 
+                                                        data-item-id="{{ item.id }}"
+                                                        title="Add to wishlist">
+                                                    <i class="bi bi-heart"></i>
+                                                </button>
+                                            {% endif %}
+                                            
+                                            <button class="btn btn-outline-info btn-sm flex-fill item-details-btn" 
+                                                    data-item-id="{{ item.id }}"
+                                                    title="View details & reviews">
+                                                <i class="bi bi-info-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-cup-straw fs-1 text-muted mb-3"></i>
+                        <p class="text-muted">No espresso items available at the moment.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Cold Drinks Tab -->
+            <div class="tab-pane fade" id="cold" role="tabpanel">
+                <div class="row g-4">
+                    {% for item in cold_drinks %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 menu-card">
+                            {% if item.is_featured %}
+                            <div class="position-absolute top-0 start-0 bg-warning text-dark px-2 py-1 rounded-bottom-end" style="z-index: 10;">
+                                <i class="bi bi-star-fill me-1"></i>Featured
+                            </div>
+                            {% endif %}
+                            
+                            {% if item.image_url %}
+                            <img src="{{ item.image_url }}" class="card-img-top menu-img" alt="{{ item.name }}">
+                            {% else %}
+                            <div class="menu-img-placeholder">
+                                <i class="bi bi-snow fs-1 text-muted"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-coffee">{{ item.name }}</h5>
+                                <p class="card-text text-muted small menu-description">{{ item.description|default:"Delicious coffee item prepared with premium ingredients." }}</p>
+                                
+                                <!-- Rating Display -->
+                                {% if item.rating_count > 0 %}
+                                    <div class="mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stars me-2">
+                                                {% with item.star_display as stars %}
+                                                    {% for i in stars.full_stars %}★{% endfor %}
+                                                    {% if stars.half_star %}☆{% endif %}
+                                                    {% for i in stars.empty_stars %}☆{% endfor %}
+                                                {% endwith %}
+                                            </div>
+                                            <small class="text-muted">({{ item.rating_count }})</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="fw-bold text-coffee mb-2 fs-5">{{ currency_symbol }}{{ item.price }}</div>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-coffee add-to-cart-btn" data-item-id="{{ item.id }}">
+                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                        </button>
+                                        
+                                        <div class="d-flex gap-2">
+                                            {% if user.is_authenticated %}
+                                                <button class="btn btn-outline-danger btn-sm flex-fill wishlist-btn" 
+                                                        data-item-id="{{ item.id }}"
+                                                        title="Add to wishlist">
+                                                    <i class="bi bi-heart"></i>
+                                                </button>
+                                            {% endif %}
+                                            
+                                            <button class="btn btn-outline-info btn-sm flex-fill item-details-btn" 
+                                                    data-item-id="{{ item.id }}"
+                                                    title="View details & reviews">
+                                                <i class="bi bi-info-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-snow fs-1 text-muted mb-3"></i>
+                        <p class="text-muted">No cold drinks available at the moment.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Pastries Tab -->
+            <div class="tab-pane fade" id="pastries" role="tabpanel">
+                <div class="row g-4">
+                    {% for item in pastries %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 menu-card">
+                            {% if item.is_featured %}
+                            <div class="position-absolute top-0 start-0 bg-warning text-dark px-2 py-1 rounded-bottom-end" style="z-index: 10;">
+                                <i class="bi bi-star-fill me-1"></i>Featured
+                            </div>
+                            {% endif %}
+                            
+                            {% if item.image_url %}
+                            <img src="{{ item.image_url }}" class="card-img-top menu-img" alt="{{ item.name }}">
+                            {% else %}
+                            <div class="menu-img-placeholder">
+                                <i class="bi bi-cake fs-1 text-muted"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-coffee">{{ item.name }}</h5>
+                                <p class="card-text text-muted small menu-description">{{ item.description|default:"Delicious coffee item prepared with premium ingredients." }}</p>
+                                
+                                <!-- Rating Display -->
+                                {% if item.rating_count > 0 %}
+                                    <div class="mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stars me-2">
+                                                {% with item.star_display as stars %}
+                                                    {% for i in stars.full_stars %}★{% endfor %}
+                                                    {% if stars.half_star %}☆{% endif %}
+                                                    {% for i in stars.empty_stars %}☆{% endfor %}
+                                                {% endwith %}
+                                            </div>
+                                            <small class="text-muted">({{ item.rating_count }})</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="fw-bold text-coffee mb-2 fs-5">{{ currency_symbol }}{{ item.price }}</div>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-coffee add-to-cart-btn" data-item-id="{{ item.id }}">
+                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                        </button>
+                                        
+                                        <div class="d-flex gap-2">
+                                            {% if user.is_authenticated %}
+                                                <button class="btn btn-outline-danger btn-sm flex-fill wishlist-btn" 
+                                                        data-item-id="{{ item.id }}"
+                                                        title="Add to wishlist">
+                                                    <i class="bi bi-heart"></i>
+                                                </button>
+                                            {% endif %}
+                                            
+                                            <button class="btn btn-outline-info btn-sm flex-fill item-details-btn" 
+                                                    data-item-id="{{ item.id }}"
+                                                    title="View details & reviews">
+                                                <i class="bi bi-info-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-cake fs-1 text-muted mb-3"></i>
+                        <p class="text-muted">No pastries available at the moment.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Desserts Tab -->
+            <div class="tab-pane fade" id="desserts" role="tabpanel">
+                <div class="row g-4">
+                    {% for item in desserts %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 menu-card">
+                            {% if item.is_featured %}
+                            <div class="position-absolute top-0 start-0 bg-warning text-dark px-2 py-1 rounded-bottom-end" style="z-index: 10;">
+                                <i class="bi bi-star-fill me-1"></i>Featured
+                            </div>
+                            {% endif %}
+                            
+                            {% if item.image_url %}
+                            <img src="{{ item.image_url }}" class="card-img-top menu-img" alt="{{ item.name }}">
+                            {% else %}
+                            <div class="menu-img-placeholder">
+                                <i class="bi bi-heart fs-1 text-muted"></i>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-coffee">{{ item.name }}</h5>
+                                <p class="card-text text-muted small menu-description">{{ item.description|default:"Delicious coffee item prepared with premium ingredients." }}</p>
+                                
+                                <!-- Rating Display -->
+                                {% if item.rating_count > 0 %}
+                                    <div class="mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stars me-2">
+                                                {% with item.star_display as stars %}
+                                                    {% for i in stars.full_stars %}★{% endfor %}
+                                                    {% if stars.half_star %}☆{% endif %}
+                                                    {% for i in stars.empty_stars %}☆{% endfor %}
+                                                {% endwith %}
+                                            </div>
+                                            <small class="text-muted">({{ item.rating_count }})</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="fw-bold text-coffee mb-2 fs-5">{{ currency_symbol }}{{ item.price }}</div>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-coffee add-to-cart-btn" data-item-id="{{ item.id }}">
+                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                        </button>
+                                        
+                                        <div class="d-flex gap-2">
+                                            {% if user.is_authenticated %}
+                                                <button class="btn btn-outline-danger btn-sm flex-fill wishlist-btn" 
+                                                        data-item-id="{{ item.id }}"
+                                                        title="Add to wishlist">
+                                                    <i class="bi bi-heart"></i>
+                                                </button>
+                                            {% endif %}
+                                            
+                                            <button class="btn btn-outline-info btn-sm flex-fill item-details-btn" 
+                                                    data-item-id="{{ item.id }}"
+                                                    title="View details & reviews">
+                                                <i class="bi bi-info-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-heart fs-1 text-muted mb-3"></i>
+                        <p class="text-muted">No desserts available at the moment.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section-padding bg-coffee text-white">
+    <div class="container text-center" data-aos="zoom-in">
+        <h2 class="mb-4">Ready to Order?</h2>
+        <p class="lead mb-4">Visit us today or contact us for delivery and catering options</p>
+        <div>
+            <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg me-3">Contact Us</a>
+            <a href="{% url 'about' %}" class="btn btn-light btn-lg">Learn More</a>
+        </div>
+    </div>
+</section>
+
+<!-- Hidden form for CSRF token -->
+<form style="display: none;">
+    {% csrf_token %}
+</form>
+
+<style>
+/* Coffee Theme Colors */
+.text-coffee {
+    color: #8B4513 !important;
+}
+
+.bg-coffee {
+    background-color: #8B4513 !important;
+}
+
+/* Menu Card Styling */
+.menu-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 0.5rem;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.15);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Menu Image Styling */
+.menu-img {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.menu-img-placeholder {
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Menu Description with Enhanced Line Clamp */
+.menu-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+    max-height: 2.8em; /* 2 lines * 1.4 line-height */
+    word-wrap: break-word;
+    hyphens: auto;
+    white-space: normal;
+    /* Remove text-overflow for proper line-clamp behavior */
+}
+
+/* Enhanced fallback for browsers that don't support line-clamp */
+@supports not (-webkit-line-clamp: 2) {
+    .menu-description {
+        display: block;
+        max-height: 2.8em;
+        overflow: hidden;
+        position: relative;
+        line-height: 1.4;
+        white-space: normal;
+        text-overflow: ellipsis;
+    }
+    
+    .menu-description::after {
+        content: "...";
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: linear-gradient(to right, transparent, white 50%, white);
+        padding-left: 1em;
+        z-index: 1;
+    }
+}
+
+/* Button Styling */
+.btn-coffee {
+    background-color: #8B4513;
+    border-color: #8B4513;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-coffee:hover {
+    background-color: #5a2e0a;
+    border-color: #5a2e0a;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.add-to-cart-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Navigation Pills */
+.menu-tabs .nav-link {
+    color: #8B4513;
+    border: 2px solid #8B4513;
+    margin: 0 5px;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background-color: transparent;
+}
+
+.menu-tabs .nav-link:hover {
+    background-color: #f8f9fa;
+    border-color: #8B4513;
+    color: #5a2e0a;
+    transform: translateY(-2px);
+}
+
+.menu-tabs .nav-link.active {
+    background-color: #8B4513 !important;
+    border-color: #8B4513 !important;
+    color: white !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .menu-tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .menu-tabs .nav-link {
+        margin: 5px;
+        font-size: 0.9rem;
+        padding: 8px 15px;
+    }
+    
+    /* Keep line-clamp working on mobile but with single line */
+    .menu-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.4;
+        max-height: 1.4em; /* 1 line * 1.4 line-height */
+        word-wrap: break-word;
+        white-space: normal;
+    }
+    
+    /* Mobile fallback for browsers that don't support line-clamp */
+    @supports not (-webkit-line-clamp: 1) {
+        .menu-description {
+            display: block;
+            max-height: 1.4em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            line-height: 1.4;
+        }
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .menu-img,
+    .menu-img-placeholder {
+        height: 180px;
+    }
+}
+
+/* Loading Animation */
+.btn-loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Enhanced Menu Styles */
+.stars {
+    color: #ffc107;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.wishlist-btn {
+    transition: all 0.3s ease;
+}
+
+.wishlist-btn:hover {
+    transform: scale(1.05);
+}
+
+.menu-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.rating-display {
+    background: rgba(255, 193, 7, 0.1);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    display: inline-block;
+}
+
+.btn-coffee {
+    transition: all 0.3s ease;
+}
+
+.btn-coffee:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
+}
+
+.toast-notification {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+</style>
+
+<script>
+// Add to cart functionality with enhanced error handling
+function addToCart(itemId) {
+    const button = document.querySelector(`[data-item-id="${itemId}"]`);
+    if (!button || button.disabled) return;
+    
+    // Show loading state
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Adding...';
+    button.disabled = true;
+    button.classList.add('btn-loading');
+    
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    if (!csrfToken) {
+        showToast('Security token not found. Please refresh the page.', 'error');
+        resetButton(button, originalContent);
+        return;
+    }
+    
+    // Make AJAX request
+    fetch(`/cart/add/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'quantity=1'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            button.innerHTML = '<i class="bi bi-check-circle me-1"></i>Added!';
+            button.classList.remove('btn-coffee', 'btn-loading');
+            button.classList.add('btn-success');
+            showToast(data.message, 'success');
+            
+            // Update cart count
+            updateCartCount(data.cart_count);
+            
+            // Reset button after delay
+            setTimeout(() => {
+                resetButton(button, originalContent);
+            }, 2000);
+        } else {
+            throw new Error(data.message || 'Failed to add item to cart');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast(error.message || 'Network error. Please try again.', 'error');
+        resetButton(button, originalContent);
+    });
+}
+
+// Helper function to reset button state
+function resetButton(button, originalContent) {
+    button.innerHTML = originalContent;
+    button.classList.remove('btn-success', 'btn-loading');
+    button.classList.add('btn-coffee');
+    button.disabled = false;
+}
+
+// Update cart count in navigation
+function updateCartCount(count) {
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = count || 0;
+        cartCountElement.style.display = (count && count > 0) ? 'inline' : 'none';
+    }
+}
+
+// Enhanced toast notification system
+function showToast(message, type = 'info') {
+    // Remove existing toasts
+    const existingToasts = document.querySelectorAll('.toast-notification');
+    existingToasts.forEach(toast => toast.remove());
+    
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'error' ? 'danger' : type} position-fixed toast-notification`;
+    toast.style.cssText = 'top: 80px; right: 20px; z-index: 9999; min-width: 300px; opacity: 0; transition: opacity 0.3s ease; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);';
+    
+    const iconMap = {
+        success: 'check-circle-fill',
+        error: 'exclamation-triangle-fill',
+        warning: 'exclamation-triangle-fill',
+        info: 'info-circle-fill'
+    };
+    
+    toast.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="bi bi-${iconMap[type] || iconMap.info} me-2"></i>
+            <span class="flex-grow-1">${message}</span>
+            <button type="button" class="btn-close ms-2" aria-label="Close"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Fade in
+    setTimeout(() => {
+        toast.style.opacity = '1';
+    }, 100);
+    
+    // Close button functionality
+    const closeBtn = toast.querySelector('.btn-close');
+    closeBtn.addEventListener('click', () => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    });
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 4000);
+}
+
+// Initialize page functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Menu page loaded successfully');
+    
+    // Tab switching analytics
+    document.querySelectorAll('.nav-link').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabName = this.textContent.trim();
+            console.log(`Menu tab viewed: ${tabName}`);
+        });
+    });
+    
+    // Image error handling
+    document.querySelectorAll('.menu-img').forEach(img => {
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+            const placeholder = this.nextElementSibling;
+            if (placeholder && placeholder.classList.contains('menu-img-placeholder')) {
+                placeholder.style.display = 'flex';
+            }
+        });
+    });
+    
+    // Initialize AOS if available
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    }
+    
+    // Add event listeners for buttons
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            addToCart(itemId);
+        });
+    });
+    
+    document.querySelectorAll('.wishlist-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            toggleWishlist(itemId, this);
+        });
+    });
+    
+    document.querySelectorAll('.item-details-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            showItemDetails(itemId);
+        });
+    });
+    
+    // Load wishlist status for authenticated users
+    if (document.querySelector('.wishlist-btn')) {
+        loadWishlistStatus();
+    }
+});
+
+
+// ============================================================================
+// ENHANCED MENU FUNCTIONALITY
+// ============================================================================
+
+// Wishlist functionality
+function toggleWishlist(itemId, button) {
+    // Check if user is authenticated by looking for wishlist buttons (only shown for authenticated users)
+    const isAuthenticated = document.querySelector('.wishlist-btn') !== null;
+    
+    if (!isAuthenticated) {
+        showToast('Please login to add items to wishlist', 'warning');
+        setTimeout(() => {
+            window.location.href = '/auth/login/?next=/menu/';
+        }, 1500);
+        return;
+    }
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    if (!csrfToken) {
+        showToast('Security token not found. Please refresh the page.', 'error');
+        return;
+    }
+    
+    // Update button state immediately for better UX
+    const icon = button.querySelector('i');
+    const isInWishlist = icon.classList.contains('bi-heart-fill');
+    
+    fetch(`/api/wishlist/add/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.in_wishlist) {
+                icon.className = 'bi bi-heart-fill';
+                button.classList.remove('btn-outline-danger');
+                button.classList.add('btn-danger');
+                showToast('Added to wishlist!', 'success');
+            } else {
+                icon.className = 'bi bi-heart';
+                button.classList.remove('btn-danger');
+                button.classList.add('btn-outline-danger');
+                showToast('Removed from wishlist', 'info');
+            }
+        } else {
+            showToast(data.message || 'Error updating wishlist', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error updating wishlist', 'error');
+    });
+}
+
+// Load wishlist status for all items
+function loadWishlistStatus() {
+    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+    
+    wishlistButtons.forEach(button => {
+        const itemId = button.dataset.itemId;
+        
+        fetch(`/api/wishlist/status/${itemId}/`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const icon = button.querySelector('i');
+            if (data.in_wishlist) {
+                icon.className = 'bi bi-heart-fill';
+                button.classList.remove('btn-outline-danger');
+                button.classList.add('btn-danger');
+            }
+        })
+        .catch(error => {
+            console.log('Error loading wishlist status:', error);
+        });
+    });
+}
+
+// Show item details with reviews
+function showItemDetails(itemId) {
+    // Placeholder for item details modal
+    // This would open a modal showing:
+    // - Full item description
+    // - Larger image
+    // - All reviews
+    // - Add review form (if logged in)
+    
+    showToast('Item details feature coming soon!', 'info');
+}
+
+// Add review functionality
+function addReview(itemId, rating, title, comment) {
+    // Check if user is authenticated by looking for wishlist buttons (only shown for authenticated users)
+    const isAuthenticated = document.querySelector('.wishlist-btn') !== null;
+    
+    if (!isAuthenticated) {
+        showToast('Please login to add reviews', 'warning');
+        setTimeout(() => {
+            window.location.href = '/auth/login/?next=/menu/';
+        }, 1500);
+        return;
+    }
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    if (!csrfToken) {
+        showToast('Security token not found. Please refresh the page.', 'error');
+        return;
+    }
+    
+    fetch(`/api/menu/${itemId}/reviews/add/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            rating: rating,
+            title: title,
+            comment: comment
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Review added successfully!', 'success');
+            // Refresh the page to show new review
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        } else {
+            showToast(data.error || 'Error adding review', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error adding review', 'error');
+    });
+}
+
+// Mark review as helpful
+function markReviewHelpful(reviewId) {
+    // Check if user is authenticated by looking for wishlist buttons (only shown for authenticated users)
+    const isAuthenticated = document.querySelector('.wishlist-btn') !== null;
+    
+    if (!isAuthenticated) {
+        showToast('Please login to vote on reviews', 'warning');
+        return;
+    }
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    fetch(`/api/reviews/${reviewId}/helpful/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(data.message, 'success');
+            // Update the helpful count in UI
+            const helpfulElement = document.querySelector(`[data-review-id="${reviewId}"] .helpful-count`);
+            if (helpfulElement) {
+                helpfulElement.textContent = data.helpful_count;
+            }
+        } else {
+            showToast(data.error || 'Error updating helpful vote', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error updating helpful vote', 'error');
+    });
+}
+</script>
+{% endblock %}

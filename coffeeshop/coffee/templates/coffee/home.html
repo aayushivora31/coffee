@@ -1,0 +1,137 @@
+{% extends 'coffee/base.html' %}
+
+{% block title %}Home - CoffeeShop{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section" style="background-image: url('https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg?auto=compress&cs=tinysrgb&w=1600');">
+    <div class="hero-overlay"></div>
+    <div class="container">
+        <div class="hero-content" data-aos="fade-up">
+            <h1 class="hero-title">Welcome to CoffeeShop</h1>
+            <p class="hero-subtitle">Experience the finest coffee beans from around the world</p>
+            <div class="mt-4">
+                <a href="{% url 'services' %}" class="btn btn-coffee btn-lg me-3">Our Services</a>
+                <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">Learn More</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Coffee Section -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h2 class="text-coffee mb-4">Our Premium Coffee</h2>
+                <p class="lead">We source our beans directly from coffee farms around the world, ensuring the highest quality and freshest taste in every cup.</p>
+                <p>From the mountains of Ethiopia to the highlands of Colombia, our coffee beans are carefully selected and roasted to perfection. Each blend tells a story of its origin and brings unique flavors to your palate.</p>
+                <a href="{% url 'about' %}" class="btn btn-coffee">Discover Our Story</a>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <img src="https://images.pexels.com/photos/4226256/pexels-photo-4226256.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                     alt="Premium Coffee Beans" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="text-coffee mb-3">Why Choose CoffeeShop?</h2>
+            <p class="lead">We're passionate about delivering exceptional coffee experiences</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 text-center">
+                    <div class="card-body p-4">
+                        <div class="text-coffee mb-3">
+                            <i class="bi bi-award-fill" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5 class="card-title">Premium Quality</h5>
+                        <p class="card-text">Only the finest coffee beans, carefully selected and expertly roasted to bring out the best flavors.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 text-center">
+                    <div class="card-body p-4">
+                        <div class="text-coffee mb-3">
+                            <i class="bi bi-people-fill" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5 class="card-title">Expert Baristas</h5>
+                        <p class="card-text">Our skilled baristas are passionate about coffee and trained to create the perfect cup every time.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 text-center">
+                    <div class="card-body p-4">
+                        <div class="text-coffee mb-3">
+                            <i class="bi bi-lightning-fill" style="font-size: 3rem;"></i>
+                        </div>
+                        <h5 class="card-title">Fast Service</h5>
+                        <p class="card-text">Quick and efficient service without compromising on quality. Get your coffee fix when you need it.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="section-padding bg-coffee text-white">
+    <div class="container text-center" data-aos="zoom-in">
+        <h2 class="mb-4">Ready for the Perfect Cup?</h2>
+        <p class="lead mb-4">Visit us today and experience the difference premium coffee makes</p>
+        <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">Get In Touch</a>
+    </div>
+</section>
+<script>
+    // Fetch API health check on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/health/')
+            .then(response => response.json())
+            .then(data => {
+                console.log('API Health Check:', data);
+            })
+            .catch(error => {
+                console.error('API Health Check failed:', error);
+            });
+    });
+
+    // Add parallax effect to hero section
+    window.addEventListener('scroll', function() {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero-section');
+        if (hero) {
+            const rate = scrolled * -0.5;
+            hero.style.transform = `translateY(${rate}px)`;
+        }
+    });
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Additional animations for home page
+    window.addEventListener('load', function() {
+        const heroContent = document.querySelector('.hero-content');
+        if (heroContent) {
+            heroContent.style.opacity = '0';
+            heroContent.style.transform = 'translateY(50px)';
+            
+            setTimeout(() => {
+                heroContent.style.transition = 'all 1s ease';
+                heroContent.style.opacity = '1';
+                heroContent.style.transform = 'translateY(0)';
+            }, 500);
+        }
+    });
+</script>
+{% endblock %}

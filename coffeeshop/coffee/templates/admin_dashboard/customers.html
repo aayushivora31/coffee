@@ -1,0 +1,272 @@
+{% extends 'admin_dashboard/base.html' %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h3 mb-0">Customer Management</h2>
+    <div class="btn-group" role="group">
+        <button class="btn btn-outline-primary" onclick="refreshCustomers()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+        </button>
+        <button class="btn btn-outline-success" onclick="exportCustomers()">
+            <i class="bi bi-download me-1"></i>Export
+        </button>
+    </div>
+</div>
+
+<!-- Customer Statistics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h6 class="card-title">Total Customers</h6>
+                <h2 class="mb-0" id="totalCustomersCount">0</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h6 class="card-title">Active This Month</h6>
+                <h2 class="mb-0" id="activeCustomersCount">0</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h6 class="card-title">New This Week</h6>
+                <h2 class="mb-0" id="newCustomersCount">0</h2>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h6 class="card-title">VIP Customers</h6>
+                <h2 class="mb-0" id="vipCustomersCount">0</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters and Search -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="searchCustomer" class="form-label">Search Customers</label>
+                <input type="text" class="form-control" id="searchCustomer" placeholder="Name, email, or phone...">
+            </div>
+            <div class="col-md-2">
+                <label for="statusFilter" class="form-label">Status</label>
+                <select class="form-select" id="statusFilter">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="joinedFrom" class="form-label">Joined From</label>
+                <input type="date" class="form-control" id="joinedFrom">
+            </div>
+            <div class="col-md-2">
+                <label for="joinedTo" class="form-label">Joined To</label>
+                <input type="date" class="form-control" id="joinedTo">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100 mt-4" onclick="applyFilters()">
+                    <i class="bi bi-funnel me-1"></i>Filter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Customers Table -->
+<div class="card">
+    <div class="card-header">
+        <h6 class="m-0 fw-bold text-primary">All Customers</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Contact</th>
+                        <th>Orders</th>
+                        <th>Total Spent</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="customersTableBody">
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Customer Details Modal -->
+<div class="modal fade" id="customerDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Customer Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="customerDetailsContent">
+                <!-- Details loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentCustomers = [];
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCustomerStats();
+        loadCustomers();
+        setupEventListeners();
+    });
+    
+    function loadCustomerStats() {
+        fetch('/api/admin/customers/stats/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('totalCustomersCount').textContent = data.total || 0;
+                document.getElementById('activeCustomersCount').textContent = data.active_this_month || 0;
+                document.getElementById('newCustomersCount').textContent = data.new_this_week || 0;
+                document.getElementById('vipCustomersCount').textContent = data.vip_customers || 0;
+            })
+            .catch(error => console.error('Error loading stats:', error));
+    }
+    
+    function loadCustomers() {
+        const params = new URLSearchParams({
+            search: document.getElementById('searchCustomer').value,
+            status: document.getElementById('statusFilter').value,
+            joined_from: document.getElementById('joinedFrom').value,
+            joined_to: document.getElementById('joinedTo').value
+        });
+        
+        fetch(`/api/admin/customers/?${params}`)
+            .then(response => response.json())
+            .then(data => {
+                currentCustomers = data.results || data;
+                displayCustomers(currentCustomers);
+            })
+            .catch(error => {
+                console.error('Error loading customers:', error);
+                showToast('Error loading customers', 'error');
+            });
+    }
+    
+    function displayCustomers(customers) {
+        const tbody = document.getElementById('customersTableBody');
+        
+        if (customers.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No customers found</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = customers.map(customer => `
+            <tr>
+                <td>
+                    <strong>${customer.first_name && customer.last_name ? `${customer.first_name} ${customer.last_name}` : customer.username}</strong>
+                    <br><small class="text-muted">@${customer.username}</small>
+                </td>
+                <td>
+                    <small>${customer.email}</small>
+                    ${customer.phone ? `<br><small class="text-muted">${customer.phone}</small>` : ''}
+                </td>
+                <td>
+                    <strong>${customer.total_orders || 0}</strong> orders
+                </td>
+                <td>
+                    <strong>₹${Number(customer.total_spent || 0).toLocaleString('en-IN')}</strong>
+                </td>
+                <td>
+                    <span class="badge bg-${customer.is_active ? 'success' : 'secondary'}">
+                        ${customer.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="viewCustomerDetails(${customer.id})" title="View Details">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    function setupEventListeners() {
+        document.getElementById('searchCustomer').addEventListener('input', function() {
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => applyFilters(), 500);
+        });
+    }
+    
+    function applyFilters() {
+        loadCustomers();
+    }
+    
+    function refreshCustomers() {
+        loadCustomerStats();
+        loadCustomers();
+        showToast('Customers refreshed', 'success');
+    }
+    
+    function exportCustomers() {
+        showToast('Export feature coming soon', 'info');
+    }
+    
+    function viewCustomerDetails(customerId) {
+        fetch(`/api/admin/customers/${customerId}/`)
+            .then(response => response.json())
+            .then(customer => {
+                const content = document.getElementById('customerDetailsContent');
+                content.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Personal Information</h6>
+                            <p><strong>Name:</strong> ${customer.first_name && customer.last_name ? `${customer.first_name} ${customer.last_name}` : customer.username}</p>
+                            <p><strong>Email:</strong> ${customer.email}</p>
+                            <p><strong>Phone:</strong> ${customer.phone || 'N/A'}</p>
+                            <p><strong>Status:</strong> <span class="badge bg-${customer.is_active ? 'success' : 'secondary'}">${customer.is_active ? 'Active' : 'Inactive'}</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Order Statistics</h6>
+                            <p><strong>Total Orders:</strong> ${customer.total_orders || 0}</p>
+                            <p><strong>Total Spent:</strong> ₹${Number(customer.total_spent || 0).toLocaleString('en-IN')}</p>
+                            <p><strong>Last Order:</strong> ${customer.last_order_date ? new Date(customer.last_order_date).toLocaleDateString('en-IN') : 'No orders'}</p>
+                        </div>
+                    </div>
+                `;
+                
+                new bootstrap.Modal(document.getElementById('customerDetailsModal')).show();
+            })
+            .catch(error => {
+                console.error('Error loading customer details:', error);
+                showToast('Error loading customer details', 'error');
+            });
+    }
+</script>
+{% endblock %}

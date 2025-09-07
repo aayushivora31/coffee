@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User Registration</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .info-section {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: bold;
+            color: #8B4513;
+        }
+        .value {
+            color: #333;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .coffee-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="coffee-icon">☕</div>
+            <h1>New User Registration</h1>
+            <p>CoffeeShop - Someone just joined our community!</p>
+        </div>
+        
+        <div class="content">
+            <h2>New User Details</h2>
+            
+            <div class="info-section">
+                <div class="info-row">
+                    <span class="label">Username:</span>
+                    <span class="value">{{ username }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">Email:</span>
+                    <span class="value">{{ email|default:"Not provided" }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">First Name:</span>
+                    <span class="value">{{ first_name|default:"Not provided" }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">Last Name:</span>
+                    <span class="value">{{ last_name|default:"Not provided" }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">Registration Date:</span>
+                    <span class="value">{{ date_joined|date:"F d, Y g:i A" }}</span>
+                </div>
+            </div>
+            
+            <p><strong>A new user has successfully registered on your CoffeeShop website!</strong></p>
+            <p>Welcome them to the coffee community and ensure they have a great experience.</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from CoffeeShop<br>
+            <small>Generated on {{ date_joined|date:"F d, Y g:i A" }}</small></p>
+        </div>
+    </div>
+</body>
+</html>

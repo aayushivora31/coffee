@@ -1,0 +1,258 @@
+{% extends 'coffee/base.html' %}
+{% load static %}
+
+{% block title %}My Wishlist - Coffee Shop{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="hero-section bg-coffee text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="bi bi-heart-fill me-3"></i>My Wishlist
+        </h1>
+        <p class="lead">Your favorite coffee shop items</p>
+    </div>
+</section>
+
+<!-- Wishlist Content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                {% if wishlist_items %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-heart text-danger me-2"></i>
+                                My Favorites ({{ wishlist_items|length }} items)
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for item in wishlist_items %}
+                                    <div class="col-md-6 mb-4">
+                                        <div class="card h-100 wishlist-item">
+                                            <div class="position-relative">
+                                                {% if item.menu_item.image_url %}
+                                                    <img src="{{ item.menu_item.image_url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ item.menu_item.name }}">
+                                                {% else %}
+                                                    <div class="bg-coffee-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                                        <i class="bi bi-cup-hot text-coffee" style="font-size: 3rem;"></i>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <!-- Remove from Wishlist Button -->
+                                                <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 remove-wishlist-btn" 
+                                                        data-item-id="{{ item.menu_item.id }}"
+                                                        title="Remove from wishlist">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="card-body d-flex flex-column">
+                                                <h6 class="card-title">{{ item.menu_item.name }}</h6>
+                                                <p class="card-text text-muted small">{{ item.menu_item.description|truncatewords:15 }}</p>
+                                                
+                                                <!-- Rating Display -->
+                                                {% if item.menu_item.rating_count > 0 %}
+                                                    <div class="mb-2">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="stars me-2">
+                                                                {% with item.menu_item.star_display as stars %}
+                                                                    {% for i in stars.full_stars %}★{% endfor %}
+                                                                    {% if stars.half_star %}☆{% endif %}
+                                                                    {% for i in stars.empty_stars %}☆{% endfor %}
+                                                                {% endwith %}
+                                                            </div>
+                                                            <small class="text-muted">({{ item.menu_item.rating_count }} reviews)</small>
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <div class="fw-bold text-coffee mb-3 fs-5">{{ currency_symbol }}{{ item.menu_item.price }}</div>
+                                                
+                                                <div class="mt-auto">
+                                                    <div class="d-grid gap-2">
+                                                        <button class="btn btn-coffee add-to-cart-btn" data-item-id="{{ item.menu_item.id }}">
+                                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                                        </button>
+                                                        <small class="text-center text-muted">Added {{ item.added_at|date:"M j" }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Continue Shopping -->
+                    <div class="text-center mt-4">
+                        <a href="{% url 'menu' %}" class="btn btn-outline-coffee">
+                            <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                        </a>
+                    </div>
+                    
+                {% else %}
+                    <!-- Empty Wishlist -->
+                    <div class="text-center py-5">
+                        <i class="bi bi-heart text-coffee" style="font-size: 4rem;"></i>
+                        <h3 class="mt-3">Your wishlist is empty</h3>
+                        <p class="text-muted">Start adding your favorite items to your wishlist!</p>
+                        <a href="{% url 'menu' %}" class="btn btn-coffee btn-lg">
+                            <i class="bi bi-cup-hot me-2"></i>Browse Menu
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.wishlist-item {
+    transition: transform 0.2s ease;
+}
+
+.wishlist-item:hover {
+    transform: translateY(-5px);
+}
+
+.stars {
+    color: #ffc107;
+    font-size: 1.1rem;
+}
+</style>
+
+<script>
+// DOM ready function
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners for add to cart buttons
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            addToCart(itemId);
+        });
+    });
+    
+    // Add event listeners for remove wishlist buttons
+    document.querySelectorAll('.remove-wishlist-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            removeFromWishlist(itemId);
+        });
+    });
+});
+
+// Add to cart functionality
+function addToCart(itemId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    if (!csrfToken) {
+        showToast('Security token not found. Please refresh the page.', 'error');
+        return;
+    }
+    
+    fetch(`/cart/add/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'quantity=1'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Item added to cart!', 'success');
+            updateCartCount();
+        } else {
+            showToast(data.message || 'Error adding item to cart', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error adding item to cart', 'error');
+    });
+}
+
+// Remove from wishlist
+function removeFromWishlist(itemId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    if (!csrfToken) {
+        showToast('Security token not found. Please refresh the page.', 'error');
+        return;
+    }
+    
+    fetch(`/api/wishlist/add/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Item removed from wishlist', 'success');
+            // Reload page to update the wishlist
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showToast(data.message || 'Error removing item from wishlist', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error removing item from wishlist', 'error');
+    });
+}
+
+// Toast notification function
+function showToast(message, type = 'info') {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} alert-dismissible fade show position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 3000);
+}
+
+// Update cart count
+function updateCartCount() {
+    fetch('/api/cart-count/', {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const cartCountElement = document.getElementById('cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = data.count || 0;
+            cartCountElement.style.display = data.count > 0 ? 'inline' : 'none';
+        }
+    })
+    .catch(error => {
+        console.log('Error updating cart count:', error);
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,770 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="description" content="Premium coffee shop with online ordering, reviews, and wishlist features. Enjoy the finest coffee experience with our curated selection of beverages and pastries.">
+      <meta name="keywords" content="coffee, espresso, latte, cappuccino, pastries, online ordering, coffee shop">
+      <meta name="author" content="Coffee Shop">
+      
+      <!-- PWA Meta Tags -->
+      <meta name="theme-color" content="#8B4513">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-status-bar-style" content="default">
+      <meta name="apple-mobile-web-app-title" content="CoffeeShop">
+      <meta name="mobile-web-app-capable" content="yes">
+      
+      <!-- Manifest -->
+      <link rel="manifest" href="{% static 'manifest.json' %}">
+      
+      <!-- Apple Touch Icons -->
+      <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM4QjQ1MTMiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjRkZGRkZGIj4KPHN0eWxlPi5jdXAtYXtmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDoyfTwvc3R5bGU+CjxwYXRoIGNsYXNzPSJjdXAtYSIgZD0ibTE3IDEwLTEuMiA2YTIgMiAwIDAgMS0yIDJINy4yYTIgMiAwIDAgMS0yLTJMNCA4aDIuNSIvPgo8cGF0aCBjbGFzcz0iY3VwLWEiIGQ9Ik0yMSA4SDMiLz4KPHN0eWxlPi5jdXAtY3tmaWxsOm5vbmU7c3Ryb2tlOiNGRkZGRkY7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS13aWR0aDoyfTwvc3R5bGU+CjxwYXRoIGNsYXNzPSJjdXAtYyIgZD0ibTcgOC0yLTNtOSAzIDItM20tMyAwdjVhMiAyIDAgMCAxLTIgMlY4WiIvPgo8L3N2Zz4KPC9zdmc+">
+      
+      <!-- Favicon -->
+      <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzhCNDUxMyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0ibTE3IDEwLTEuMiA2YTIgMiAwIDAgMS0yIDJINy4yYTIgMiAwIDAgMS0yLTJMNCA4aDIuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOEI0NTEzIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTIxIDhIM00iIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzhCNDUxMyIgc3Ryb2tlLXdpZHRoPSIyIi8+CjwvZz4KPC9zdmc+">
+      
+      <title>
+        {% block title %}CoffeeShop - Premium Coffee Experience{% endblock %}
+      </title>
+
+      <!-- Bootstrap 5 CSS -->
+      <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+      />
+
+      <!-- AOS CSS -->
+      <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+      <link rel="stylesheet" href="{% static 'css/style.css' %}">
+      <link rel="stylesheet" href="{% static 'css/images.css' %}">
+
+
+      <!-- Bootstrap Icons -->
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+      />
+
+      <!-- Custom Navigation Styles -->
+      <style>
+        /* Enhanced Navigation Bar Styling */
+        .navbar {
+          background: linear-gradient(135deg, #8B4513, #6B3410);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+          transition: all 0.3s ease;
+          padding: 0.8rem 0;
+        }
+        
+        .navbar.scrolled {
+          background: rgba(139, 69, 19, 0.95);
+          backdrop-filter: blur(15px);
+          padding: 0.5rem 0;
+        }
+        
+        .navbar-brand {
+          font-weight: 700;
+          font-size: 1.6rem;
+          color: #fff !important;
+          transition: all 0.3s ease;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .navbar-brand:hover {
+          transform: scale(1.05);
+          color: #ffd700 !important;
+        }
+        
+        /* Perfect Center Navigation Links */
+        .navbar-nav.mx-auto {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 10;
+        }
+        
+        .navbar-nav.mx-auto .nav-link {
+          color: #fff !important;
+          font-weight: 600;
+          margin: 0 8px;
+          padding: 10px 15px;
+          border-radius: 25px;
+          transition: all 0.3s ease;
+          position: relative;
+          text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+          font-size: 1rem;
+        }
+        
+        .navbar-nav.mx-auto .nav-link:hover {
+          background-color: rgba(255, 255, 255, 0.15);
+          transform: translateY(-3px);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .navbar-nav.mx-auto .nav-link.active {
+          background-color: rgba(255, 255, 255, 0.25);
+          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        /* Perfect Right Corner Action Icons */
+        .navbar-nav.ms-auto {
+          gap: 15px;
+          align-items: center;
+          margin-right: 10px;
+        }
+        
+        .action-icon {
+          background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
+          width: 48px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+          color: #fff !important;
+          text-decoration: none;
+        }
+        
+        .action-icon:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+          transform: scale(1.1) translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          color: #ffd700 !important;
+        }
+        
+        .cart-link {
+          background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
+          width: 48px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+          margin-right: 8px;
+        }
+        
+        .cart-link:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+          transform: scale(1.1) translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        /* Mobile Responsive - Perfect Alignment */
+        @media (max-width: 991px) {
+          .navbar-nav.mx-auto {
+            position: static;
+            transform: none;
+            text-align: center;
+            margin: 25px 0;
+            width: 100%;
+          }
+          
+          .navbar-nav.mx-auto .nav-link {
+            margin: 8px 0;
+            display: block;
+            width: 100%;
+            text-align: center;
+          }
+          
+          .navbar-nav.ms-auto {
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+          
+          .action-icon {
+            margin: 5px;
+            width: 45px;
+            height: 45px;
+          }
+          
+          .cart-link {
+            margin: 5px;
+            width: 45px;
+            height: 45px;
+          }
+        }
+        
+        /* Enhanced Active Page Indicator */
+        .nav-link.active::after {
+          content: '';
+          position: absolute;
+          bottom: -8px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 30px;
+          height: 3px;
+          background: linear-gradient(45deg, #ffd700, #ffed4e);
+          border-radius: 3px;
+          box-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+        }
+        
+        /* Additional Enhancements */
+        .navbar-toggler {
+          border: none;
+          padding: 4px 8px;
+        }
+        
+        .navbar-toggler:focus {
+          box-shadow: none;
+        }
+        
+        .navbar-toggler-icon {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        
+        /* Dropdown Menu Styling */
+        .dropdown-menu {
+          background: rgba(139, 69, 19, 0.95);
+          border: none;
+          border-radius: 15px;
+          box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+          backdrop-filter: blur(10px);
+        }
+        
+        .dropdown-item {
+          color: #fff;
+          transition: all 0.3s ease;
+        }
+        
+        .dropdown-item:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+          color: #ffd700;
+        }
+      </style>
+
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="{% url 'home' %}">
+            <i class="bi bi-cup-hot-fill me-2"></i>CoffeeShop
+          </a>
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Brand spacer for centering -->
+            <div class="navbar-nav flex-fill"></div>
+            
+            <!-- Main Navigation Links (Center) -->
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'menu' %}">Menu</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'services' %}">Services</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+              </li>
+            </ul>
+            
+            <!-- Cart & Authentication (Right Corner) -->
+            <ul class="navbar-nav ms-auto">
+              <!-- Wishlist Icon (for authenticated users) -->
+              {% if user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link position-relative d-flex align-items-center action-icon" href="{% url 'wishlist' %}" title="My Wishlist">
+                    <i class="bi bi-heart fs-5"></i>
+                  </a>
+                </li>
+              {% endif %}
+              
+              <!-- Cart Icon -->
+              <li class="nav-item">
+                <a class="nav-link position-relative d-flex align-items-center cart-link" href="{% url 'cart' %}" title="Shopping Cart">
+                  <i class="bi bi-cart3 fs-5"></i>
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count" {% if cart_count == 0 %}style="display: none;"{% endif %}>
+                    {{ cart_count|default:0 }}
+                  </span>
+                </a>
+              </li>
+              
+              <!-- Authentication -->
+              {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle d-flex align-items-center action-icon" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" title="User Menu">
+                    <i class="bi bi-person-circle fs-4"></i>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'wishlist' %}"><i class="bi bi-heart me-2"></i>My Wishlist</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-clock-history me-2"></i>Order History</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                  </ul>
+                </li>
+              {% else %}
+                <!-- Login Icon -->
+                <li class="nav-item">
+                  <a class="nav-link action-icon" href="{% url 'login' %}" title="Login">
+                    <i class="bi bi-box-arrow-in-right fs-5"></i>
+                  </a>
+                </li>
+                <!-- Sign Up Icon -->
+                <li class="nav-item">
+                  <a class="nav-link action-icon" href="{% url 'signup' %}" title="Sign Up">
+                    <i class="bi bi-person-plus fs-5"></i>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main>
+        <!-- Messages/Notifications -->
+        {% if messages %}
+          <div class="alert-container position-fixed" style="top: 70px; right: 20px; z-index: 9999;">
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'error' %}exclamation-triangle-fill{% elif message.tags == 'warning' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        {% block content %} {% endblock %}
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer mt-auto">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+              <h5 class="text-white mb-3">
+                <i class="bi bi-cup-hot-fill me-2"></i>CoffeeShop
+              </h5>
+              <p>
+                Experience the finest coffee beans from around the world. We're
+                passionate about delivering exceptional coffee experiences to
+                our customers.
+              </p>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4">
+              <h6 class="text-white mb-3">Quick Links</h6>
+              <ul class="list-unstyled">
+                <li><a href="{% url 'home' %}"><i class="bi bi-house me-2"></i>Home</a></li>
+                <li><a href="{% url 'about' %}"><i class="bi bi-info-circle me-2"></i>About</a></li>
+                <li><a href="{% url 'menu' %}"><i class="bi bi-cup-hot me-2"></i>Menu</a></li>
+                <li><a href="{% url 'services' %}"><i class="bi bi-gear me-2"></i>Services</a></li>
+                <li><a href="{% url 'contact' %}"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+              </ul>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+              <h6 class="text-white mb-3">Contact Info</h6>
+              <p>
+                <i class="bi bi-geo-alt-fill me-2 text-coffee-light"></i>123 Coffee Street, Bean
+                City
+              </p>
+              <p><i class="bi bi-telephone-fill me-2 text-coffee-light"></i>+91 98765 43210</p>
+              <p><i class="bi bi-envelope-fill me-2 text-coffee-light"></i>info@coffeeshop.com</p>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+              <h6 class="text-white mb-3">Follow Us</h6>
+              <div class="d-flex social-links">
+                <a href="#" class="text-white" title="Facebook">
+                  <i class="bi bi-facebook"></i>
+                </a>
+                <a href="#" class="text-white" title="Twitter">
+                  <i class="bi bi-twitter"></i>
+                </a>
+                <a href="#" class="text-white" title="Instagram">
+                  <i class="bi bi-instagram"></i>
+                </a>
+                <a href="#" class="text-white" title="LinkedIn">
+                  <i class="bi bi-linkedin"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <hr class="my-4" />
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <p class="mb-0">
+                &copy; <span id="currentYear"></span> CoffeeShop. All rights
+                reserved.
+              </p>
+            </div>
+            <div class="col-md-6 text-md-end">
+              <p class="mb-0">
+                Made with <i class="bi bi-heart-fill text-danger"></i> for
+                coffee lovers
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <!-- Back to Top Button -->
+      <button id="backToTop" title="Back to top">
+        <i class="bi bi-arrow-up"></i>
+      </button>
+
+      <!-- Bootstrap 5 JS -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+      <!-- AOS JS -->
+      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+      <script>
+        // Initialize AOS
+        AOS.init({
+          duration: 1000,
+          once: true,
+          offset: 100,
+        });
+
+        // Set current year in footer
+        document.getElementById("currentYear").textContent =
+          new Date().getFullYear();
+
+        // Navbar scroll effect
+        window.addEventListener("scroll", function () {
+          const navbar = document.querySelector(".navbar");
+          if (window.scrollY > 50) {
+            navbar.classList.add("scrolled");
+          } else {
+            navbar.classList.remove("scrolled");
+          }
+        });
+
+        // Back to top button
+        const backToTopButton = document.getElementById("backToTop");
+
+        window.addEventListener("scroll", function () {
+          if (window.scrollY > 300) {
+            backToTopButton.style.display = "block";
+          } else {
+            backToTopButton.style.display = "none";
+          }
+        });
+
+        backToTopButton.addEventListener("click", function () {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
+        });
+
+        // Smooth scrolling for anchor links
+        document.addEventListener("DOMContentLoaded", function () {
+          const links = document.querySelectorAll('a[href^="#"]');
+
+          links.forEach((link) => {
+            link.addEventListener("click", function (e) {
+              e.preventDefault();
+
+              const targetId = this.getAttribute("href").substring(1);
+              const targetElement = document.getElementById(targetId);
+
+              if (targetElement) {
+                const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
+
+                window.scrollTo({
+                  top: offsetTop,
+                  behavior: "smooth",
+                });
+              }
+            });
+          });
+          
+          // Update active nav link
+          const currentPath = window.location.pathname;
+          const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+          navLinks.forEach((link) => {
+            if (
+              link.getAttribute("href") === currentPath ||
+              (currentPath === "/" && link.getAttribute("href").includes("home"))
+            ) {
+              link.classList.add("active");
+            }
+          });
+          
+          // Load cart count on page load
+          updateCartCount();
+          
+          // Handle image loading errors globally
+          document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('error', function() {
+              // Replace with placeholder if image fails to load
+              if (!this.dataset.errorHandled) {
+                this.dataset.errorHandled = 'true';
+                const placeholder = this.parentNode.querySelector('.placeholder-image') || 
+                  this.parentNode.querySelector('.menu-img-placeholder');
+                if (placeholder) {
+                  this.style.display = 'none';
+                  placeholder.style.display = 'flex';
+                }
+              }
+            });
+          });
+          
+          // Enhanced footer social links
+          document.querySelectorAll('.footer .social-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+              e.preventDefault();
+              showNotification('Social media integration coming soon!', 'info');
+            });
+          });
+        });
+      
+      // Currency functions
+      function setCurrency(currency) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{% url "set_currency" %}';
+        
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrfmiddlewaretoken';
+        csrfToken.value = '{{ csrf_token }}';
+        
+        const currencyInput = document.createElement('input');
+        currencyInput.type = 'hidden';
+        currencyInput.name = 'currency';
+        currencyInput.value = currency;
+        
+        form.appendChild(csrfToken);
+        form.appendChild(currencyInput);
+        document.body.appendChild(form);
+        form.submit();
+      }
+      
+      // Cart functions
+      function updateCartCount() {
+        // Get cart count from template context or API
+        const cartCountElement = document.getElementById('cart-count');
+        if (cartCountElement) {
+          fetch('/api/cart-count/', {
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Failed to fetch cart count');
+          })
+          .then(data => {
+            const count = data.count || 0;
+            cartCountElement.textContent = count;
+            cartCountElement.style.display = count > 0 ? 'inline' : 'none';
+          })
+          .catch(error => {
+            console.log('Cart count update failed, using template value:', error);
+            // Fallback to current template value - no changes needed
+          });
+        }
+      }
+          
+      // PWA Installation and Service Worker
+      window.addEventListener('load', async () => {
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+          try {
+            const registration = await navigator.serviceWorker.register('{% static "sw.js" %}');
+            console.log('SW registered: ', registration);
+                
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Show update available notification
+                  showUpdateNotification();
+                }
+              });
+            });
+                
+          } catch (error) {
+            console.log('SW registration failed: ', error);
+          }
+        }
+            
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          deferredPrompt = e;
+          showInstallPromotion();
+        });
+            
+        // Handle PWA install
+        window.installPWA = async () => {
+          if (!deferredPrompt) return;
+              
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+              
+          if (outcome === 'accepted') {
+            console.log('PWA installed');
+            hideInstallPromotion();
+          }
+              
+          deferredPrompt = null;
+        };
+      });
+          
+      function showInstallPromotion() {
+        // Create install banner
+        const banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.className = 'position-fixed bottom-0 start-0 end-0 bg-coffee text-white p-3 d-flex align-items-center justify-content-between';
+        banner.style.zIndex = '9999';
+        banner.innerHTML = `
+          <div class="d-flex align-items-center">
+            <i class="bi bi-phone me-2"></i>
+            <span>Install Coffee Shop app for a better experience!</span>
+          </div>
+          <div>
+            <button class="btn btn-light btn-sm me-2" onclick="installPWA()">Install</button>
+            <button class="btn btn-outline-light btn-sm" onclick="hideInstallPromotion()">Later</button>
+          </div>
+        `;
+            
+        document.body.appendChild(banner);
+            
+        // Auto hide after 10 seconds
+        setTimeout(hideInstallPromotion, 10000);
+      }
+          
+      function hideInstallPromotion() {
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) {
+          banner.remove();
+        }
+      }
+          
+      function showUpdateNotification() {
+        const notification = document.createElement('div');
+        notification.className = 'position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-info alert-dismissible';
+        notification.style.zIndex = '9999';
+        notification.innerHTML = `
+          <i class="bi bi-arrow-clockwise me-2"></i>
+          New version available! 
+          <button class="btn btn-sm btn-info ms-2" onclick="window.location.reload()">Update Now</button>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+            
+        document.body.appendChild(notification);
+      }
+      
+      // Add to cart function
+      function addToCart(itemId, quantity = 1) {
+        // Get CSRF token from cookie or form
+        function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+              }
+            }
+          }
+          return cookieValue;
+        }
+        
+        const csrfToken = getCookie('csrftoken') || document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+        
+        if (!csrfToken) {
+          showNotification('Security token not found. Please refresh the page.', 'error');
+          return;
+        }
+        
+        const formData = new FormData();
+        formData.append('quantity', quantity);
+        formData.append('csrfmiddlewaretoken', csrfToken);
+        
+        fetch(`/cart/add/${itemId}/`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': csrfToken
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            showNotification(data.message || 'Item added to cart!', 'success');
+            updateCartCount();
+          } else {
+            showNotification(data.message || 'Error adding item to cart', 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          showNotification('Error adding item to cart. Please try again.', 'error');
+        });
+      }
+      
+      // Show notification function
+      function showNotification(message, type = 'info') {
+        const alertContainer = document.querySelector('.alert-container') || 
+          (() => {
+            const container = document.createElement('div');
+            container.className = 'alert-container position-fixed';
+            container.style.cssText = 'top: 70px; right: 20px; z-index: 9999;';
+            document.body.appendChild(container);
+            return container;
+          })();
+        
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type} alert-dismissible fade show`;
+        alert.innerHTML = `
+          <i class="bi bi-${type === 'success' ? 'check-circle-fill' : type === 'error' ? 'exclamation-triangle-fill' : 'info-circle-fill'} me-2"></i>
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        alertContainer.appendChild(alert);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+          if (alert.parentNode) {
+            alert.remove();
+          }
+        }, 5000);
+      }
+      </script>
+
+      {% block extra_js %}{% endblock %}
+    </body>
+</html>

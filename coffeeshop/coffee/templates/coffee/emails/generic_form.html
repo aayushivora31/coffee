@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submission</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .form-data {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .data-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .data-label {
+            font-weight: bold;
+            color: #8B4513;
+            text-transform: capitalize;
+        }
+        .data-value {
+            color: #333;
+            margin-top: 5px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .coffee-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="coffee-icon">📝</div>
+            <h1>{{ form_type }} Submission</h1>
+            <p>CoffeeShop - New form data received</p>
+        </div>
+        
+        <div class="content">
+            <h3>Form Data</h3>
+            
+            <div class="form-data">
+                {% for key, value in form_data.items %}
+                <div class="data-item">
+                    <div class="data-label">{{ key|title }}:</div>
+                    <div class="data-value">{{ value }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <p><strong>A new {{ form_type }} form has been submitted on your CoffeeShop website!</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from CoffeeShop<br>
+            <small>Generated on {{ submitted_at|date:"F d, Y g:i A"|default:"Now" }}</small></p>
+        </div>
+    </div>
+</body>
+</html>

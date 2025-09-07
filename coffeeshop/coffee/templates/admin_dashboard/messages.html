@@ -1,0 +1,517 @@
+{% extends 'admin_dashboard/base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - CoffeeShop Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    .message-card {
+        transition: all 0.3s ease;
+        border-left: 4px solid transparent;
+        border-radius: 10px;
+        margin: 0.75rem;
+        padding: 1.25rem !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .message-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        background-color: rgba(0,0,0,0.02);
+    }
+    
+    .message-card.unread {
+        border-left-color: #dc3545;
+        background-color: rgba(220, 53, 69, 0.05);
+    }
+    
+    .message-card.read {
+        border-left-color: #28a745;
+    }
+    
+    .message-preview {
+        max-height: 3em;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.5;
+        word-wrap: break-word;
+        white-space: normal;
+        /* Remove text-overflow for proper line-clamp behavior */
+    }
+    
+    /* Enhanced fallback for browsers that don't support line-clamp */
+    @supports not (-webkit-line-clamp: 2) {
+        .message-preview {
+            display: block;
+            max-height: 3em;
+            overflow: hidden;
+            position: relative;
+            line-height: 1.5;
+            white-space: normal;
+            text-overflow: ellipsis;
+        }
+        
+        .message-preview::after {
+            content: "...";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(to right, transparent, white 50%, white);
+            padding-left: 1em;
+            z-index: 1;
+        }
+    }
+    
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .stats-card-container {
+        margin-bottom: 2rem;
+    }
+    
+    .stats-card-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-card-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stats-card-icon {
+        font-size: 2.5rem;
+        opacity: 0.9;
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card:hover .stats-card-icon {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 1;
+    }
+    
+    /* Enhanced card styling */
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+    
+    .card:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        transform: translateY(-3px);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+    
+    .stats-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #ffd700, #ffed4e);
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .stats-card.today {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .stats-card.unread {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .stats-card .fs-1 {
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card:hover .fs-1 {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    
+    .stats-card h6 {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stats-card h2 {
+        font-weight: 700;
+        margin-bottom: 0;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 p-4 bg-white rounded-3 shadow-sm">
+        <div>
+            <h1 class="h2 mb-2 text-primary">
+                <i class="bi bi-envelope me-2"></i>Contact Messages
+            </h1>
+            <p class="mb-0 text-muted">Manage customer inquiries and contact form submissions</p>
+        </div>
+        <div>
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-primary rounded-pill px-4 py-2">
+                <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-card-container mb-4">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="stats-card shadow-lg">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="stats-card-title mb-0">Total Messages</h6>
+                            <h2 class="stats-card-value mb-0">{{ total_messages }}</h2>
+                        </div>
+                        <div class="stats-card-icon">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stats-card unread shadow-lg">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="stats-card-title mb-0">Unread Messages</h6>
+                            <h2 class="stats-card-value mb-0">{{ unread_messages }}</h2>
+                        </div>
+                        <div class="stats-card-icon">
+                            <i class="bi bi-envelope-exclamation"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="stats-card today shadow-lg">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="stats-card-title mb-0">Today's Messages</h6>
+                            <h2 class="stats-card-value mb-0">{{ today_messages }}</h2>
+                        </div>
+                        <div class="stats-card-icon">
+                            <i class="bi bi-calendar-day"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Search -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <i class="bi bi-funnel me-2"></i>Filter Messages
+            </h5>
+        </div>
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="search" class="form-label fw-bold">Search Messages</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text" class="form-control" id="search" name="search" 
+                               value="{{ search_query }}" placeholder="Search by name, email, or message...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label fw-bold">Status Filter</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">All Messages</option>
+                        <option value="unread" {% if status_filter == 'unread' %}selected{% endif %}>Unread Only</option>
+                        <option value="read" {% if status_filter == 'read' %}selected{% endif %}>Read Only</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">&nbsp;</label>
+                    <button type="submit" class="btn btn-primary w-100 rounded-pill">
+                        <i class="bi bi-search me-1"></i>Filter
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">&nbsp;</label>
+                    <a href="{% url 'admin_messages' %}" class="btn btn-outline-secondary w-100 rounded-pill">
+                        <i class="bi bi-x-circle me-1"></i>Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Messages List -->
+    <div class="card">
+        <div class="card-header bg-gradient-primary text-white rounded-top">
+            <h5 class="mb-0">
+                <i class="bi bi-list me-2"></i>Recent Messages
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="message-card {% if not message.is_read %}unread{% else %}read{% endif %} p-3 border-bottom">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">
+                                        <strong>{{ message.name }}</strong>
+                                        {% if not message.is_read %}
+                                            <span class="badge bg-danger status-badge ms-2">New</span>
+                                        {% else %}
+                                            <span class="badge bg-success status-badge ms-2">Read</span>
+                                        {% endif %}
+                                    </h6>
+                                    <p class="text-muted mb-0">
+                                        <i class="bi bi-envelope me-1"></i>{{ message.email }}
+                                    </p>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="bi bi-clock me-1"></i>{{ message.created_at|date:"M d, Y H:i" }}
+                                </small>
+                            </div>
+                            <div class="message-preview text-muted">
+                                {{ message.message }}
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group" role="group">
+                                {% if not message.is_read %}
+                                    <button class="btn btn-sm btn-outline-success mark-read-btn rounded-pill" 
+                                            data-message-id="{{ message.id }}">
+                                        <i class="bi bi-check-circle me-1"></i>Mark Read
+                                    </button>
+                                {% endif %}
+                                <a href="mailto:{{ message.email }}?subject=Re: Your Message&body=Hi {{ message.name }},%0D%0A%0D%0AThank you for contacting CoffeeShop.%0D%0A%0D%0A" 
+                                   class="btn btn-sm btn-outline-primary rounded-pill">
+                                    <i class="bi bi-reply me-1"></i>Reply
+                                </a>
+                                <button class="btn btn-sm btn-outline-info view-full-btn rounded-pill" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#messageModal"
+                                        data-name="{{ message.name }}"
+                                        data-email="{{ message.email }}"
+                                        data-message="{{ message.message }}"
+                                        data-date="{{ message.created_at|date:'F d, Y H:i' }}">
+                                    <i class="bi bi-eye me-1"></i>View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Pagination -->
+                {% if messages.has_other_pages %}
+                <div class="p-3">
+                    <nav aria-label="Messages pagination">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if messages.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ messages.previous_page_number }}">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <li class="page-item active">
+                                <span class="page-link">{{ messages.number }}</span>
+                            </li>
+                            
+                            {% if messages.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ messages.next_page_number }}">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-envelope text-muted" style="font-size: 4rem;"></i>
+                    <h4 class="mt-3">No Messages Found</h4>
+                    <p class="text-muted">No contact form submissions match your current filters.</p>
+                    {% if search_query or status_filter %}
+                        <a href="{% url 'admin_messages' %}" class="btn btn-primary">View All Messages</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Message Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Message Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Name:</strong>
+                        <p id="modal-name"></p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Email:</strong>
+                        <p id="modal-email"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Date:</strong>
+                        <p id="modal-date"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Message:</strong>
+                        <div id="modal-message" class="border p-3 rounded bg-light"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="#" id="modal-reply-btn" class="btn btn-primary">
+                    <i class="bi bi-reply"></i> Reply via Email
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Get CSRF token from the DOM
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Mark as read functionality
+    document.querySelectorAll('.mark-read-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const messageId = this.dataset.messageId;
+            const button = this;
+            
+            // Show loading state
+            button.innerHTML = '<i class="bi bi-hourglass-split"></i> Marking...';
+            button.disabled = true;
+            
+            fetch(`/api/admin/messages/${messageId}/mark-read/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update UI
+                    const messageCard = button.closest('.message-card');
+                    messageCard.classList.remove('unread');
+                    messageCard.classList.add('read');
+                    
+                    // Update status badge
+                    const badge = messageCard.querySelector('.status-badge');
+                    badge.textContent = 'Read';
+                    badge.classList.remove('bg-danger');
+                    badge.classList.add('bg-success');
+                    
+                    // Remove the mark read button
+                    button.remove();
+                    
+                    showToast('Message marked as read', 'success');
+                    
+                    // Update statistics
+                    location.reload();
+                } else {
+                    showToast('Error marking message as read', 'error');
+                    button.innerHTML = '<i class="bi bi-check"></i> Mark Read';
+                    button.disabled = false;
+                }
+            })
+            .catch(error => {
+                showToast('Error marking message as read', 'error');
+                button.innerHTML = '<i class="bi bi-check"></i> Mark Read';
+                button.disabled = false;
+            });
+        });
+    });
+    
+    // View full message modal
+    document.querySelectorAll('.view-full-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            document.getElementById('modal-name').textContent = this.dataset.name;
+            document.getElementById('modal-email').textContent = this.dataset.email;
+            document.getElementById('modal-date').textContent = this.dataset.date;
+            document.getElementById('modal-message').textContent = this.dataset.message;
+            
+            // Update reply button
+            const replyBtn = document.getElementById('modal-reply-btn');
+            replyBtn.href = `mailto:${this.dataset.email}?subject=Re: Your Message&body=Hi ${this.dataset.name},%0D%0A%0D%0AThank you for contacting CoffeeShop.%0D%0A%0D%0A`;
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,372 @@
+{% extends 'coffee/base.html' %}
+
+{% block title %}Services - CoffeeShop{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-coffee text-white py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-3">Our Services</h1>
+                <p class="lead">Discover all the ways we can enhance your coffee experience</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Grid -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Coffee Brewing Service -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100">
+                    <img src="https://images.pexels.com/photos/4109743/pexels-photo-4109743.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                         class="card-img-top" alt="Coffee Brewing" style="height: 250px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-coffee">Expert Coffee Brewing</h5>
+                        <p class="card-text flex-grow-1">Our skilled baristas craft each cup with precision, using premium beans and professional techniques to deliver the perfect brew every time.</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-coffee service-btn" data-service="brewing">Learn More</button>
+                            <button class="btn btn-outline-coffee ms-2 service-btn" data-service="brewing-quote">Get Quote</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coffee Bean Sales -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100">
+                    <img src="https://images.pexels.com/photos/4226256/pexels-photo-4226256.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                         class="card-img-top" alt="Coffee Beans" style="height: 250px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-coffee">Premium Bean Sales</h5>
+                        <p class="card-text flex-grow-1">Take home our carefully selected coffee beans. We offer a variety of single-origin and blended beans, freshly roasted to order.</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-coffee service-btn" data-service="beans">Shop Beans</button>
+                            <button class="btn btn-outline-coffee ms-2 service-btn" data-service="beans-info">More Info</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coffee Training -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100">
+                    <img src="https://images.pexels.com/photos/4350631/pexels-photo-4350631.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                         class="card-img-top" alt="Coffee Training" style="height: 250px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-coffee">Barista Training</h5>
+                        <p class="card-text flex-grow-1">Learn the art of coffee making from our expert baristas. We offer comprehensive training programs for beginners and professionals alike.</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-coffee service-btn" data-service="training">Enroll Now</button>
+                            <button class="btn btn-outline-coffee ms-2 service-btn" data-service="training-schedule">View Schedule</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Catering Services -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="card h-100">
+                    <img src="https://images.pexels.com/photos/3992171/pexels-photo-3992171.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                         class="card-img-top" alt="Coffee Catering" style="height: 250px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-coffee">Event Catering</h5>
+                        <p class="card-text flex-grow-1">Make your events special with our professional coffee catering services. Perfect for corporate meetings, weddings, and private parties.</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-coffee service-btn" data-service="catering">Book Catering</button>
+                            <button class="btn btn-outline-coffee ms-2 service-btn" data-service="catering-menu">View Menu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subscription Service -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                <div class="card h-100">
+                    <img src="https://images.pexels.com/photos/4790062/pexels-photo-4790062.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                         class="card-img-top" alt="Coffee Subscription" style="height: 250px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-coffee">Coffee Subscription</h5>
+                        <p class="card-text flex-grow-1">Never run out of great coffee! Our subscription service delivers freshly roasted beans to your door on a schedule that works for you.</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-coffee service-btn" data-service="subscription">Subscribe</button>
+                            <button class="btn btn-outline-coffee ms-2 service-btn" data-service="subscription-plans">View Plans</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipment Sales -->
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                <div class="card h-100">
+                    <img src="https://images.pexels.com/photos/4226796/pexels-photo-4226796.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                         class="card-img-top" alt="Coffee Equipment" style="height: 250px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-coffee">Coffee Equipment</h5>
+                        <p class="card-text flex-grow-1">Upgrade your home brewing setup with our selection of professional-grade coffee equipment, from espresso machines to grinders.</p>
+                        <div class="mt-auto">
+                            <button class="btn btn-coffee service-btn" data-service="equipment">Shop Equipment</button>
+                            <button class="btn btn-outline-coffee ms-2 service-btn" data-service="equipment-guide">Buying Guide</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Process Section -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="text-coffee mb-3">How We Work</h2>
+            <p class="lead">Our simple process ensures you get exactly what you need</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-center">
+                    <div class="bg-coffee text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px;">
+                        <span class="fs-3 fw-bold">1</span>
+                    </div>
+                    <h5>Consultation</h5>
+                    <p>We discuss your needs and preferences to understand exactly what you're looking for.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-center">
+                    <div class="bg-coffee text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px;">
+                        <span class="fs-3 fw-bold">2</span>
+                    </div>
+                    <h5>Customization</h5>
+                    <p>We tailor our services to meet your specific requirements and budget.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-center">
+                    <div class="bg-coffee text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px;">
+                        <span class="fs-3 fw-bold">3</span>
+                    </div>
+                    <h5>Delivery</h5>
+                    <p>We execute our services with attention to detail and professional excellence.</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="text-center">
+                    <div class="bg-coffee text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                         style="width: 80px; height: 80px;">
+                        <span class="fs-3 fw-bold">4</span>
+                    </div>
+                    <h5>Follow-up</h5>
+                    <p>We ensure your complete satisfaction and provide ongoing support when needed.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section-padding bg-coffee text-white">
+    <div class="container text-center" data-aos="zoom-in">
+        <h2 class="mb-4">Ready to Get Started?</h2>
+        <p class="lead mb-4">Let us help you discover the perfect coffee solution for your needs</p>
+        <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">Contact Us Today</a>
+    </div>
+</section>
+
+<!-- Service Modal -->
+<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-coffee text-white">
+                <h5 class="modal-title" id="serviceModalLabel">Service Information</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalContent">Service details will appear here...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-coffee" id="modalActionBtn">Take Action</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Service button event handlers
+    document.addEventListener('DOMContentLoaded', function() {
+        const serviceButtons = document.querySelectorAll('.service-btn');
+        const modal = new bootstrap.Modal(document.getElementById('serviceModal'));
+        const modalTitle = document.getElementById('serviceModalLabel');
+        const modalContent = document.getElementById('modalContent');
+        const modalActionBtn = document.getElementById('modalActionBtn');
+        
+        // Service information mapping
+        const serviceInfo = {
+            'brewing': {
+                title: 'Expert Coffee Brewing',
+                content: 'Our master baristas use precision techniques and premium equipment to craft exceptional coffee experiences. Each cup is carefully prepared to highlight the unique characteristics of our selected beans.',
+                action: 'Visit Our Shop'
+            },
+            'brewing-quote': {
+                title: 'Coffee Brewing Quote',
+                content: 'Get a personalized quote for our coffee brewing services. Whether for a single event or regular service, we\'ll provide competitive pricing tailored to your needs.',
+                action: 'Request Quote'
+            },
+            'beans': {
+                title: 'Premium Coffee Beans',
+                content: 'Shop our collection of carefully sourced coffee beans from around the world. From single-origin specialties to expertly crafted blends, find your perfect cup.',
+                action: 'Browse Catalog'
+            },
+            'beans-info': {
+                title: 'Coffee Bean Information',
+                content: 'Learn about our sourcing process, roasting profiles, and storage recommendations. We provide detailed information about each origin and blend to help you make the perfect choice.',
+                action: 'Learn More'
+            },
+            'training': {
+                title: 'Barista Training Program',
+                content: 'Master the art of coffee making with our comprehensive training programs. From basic brewing techniques to advanced latte art, we offer courses for all skill levels.',
+                action: 'Enroll Today'
+            },
+            'training-schedule': {
+                title: 'Training Schedule',
+                content: 'View our upcoming training sessions and workshops. We offer flexible scheduling including weekends and evenings to accommodate your schedule.',
+                action: 'View Calendar'
+            },
+            'catering': {
+                title: 'Event Catering Services',
+                content: 'Elevate your events with our professional coffee catering. We provide complete coffee service including equipment, baristas, and premium beverages for any size gathering.',
+                action: 'Book Now'
+            },
+            'catering-menu': {
+                title: 'Catering Menu',
+                content: 'Explore our catering menu featuring espresso drinks, drip coffee, cold brew, and specialty beverages. We also offer pastries and light refreshments to complement your coffee service.',
+                action: 'View Full Menu'
+            },
+            'subscription': {
+                title: 'Coffee Subscription Service',
+                content: 'Never run out of great coffee with our flexible subscription plans. Choose your preferred beans, grind, and delivery frequency. Cancel or modify anytime.',
+                action: 'Start Subscription'
+            },
+            'subscription-plans': {
+                title: 'Subscription Plans',
+                content: 'Choose from weekly, bi-weekly, or monthly delivery options. Select from our curated selection or create a custom mix of your favorite beans.',
+                action: 'Compare Plans'
+            },
+            'equipment': {
+                title: 'Coffee Equipment Sales',
+                content: 'Upgrade your home coffee setup with our selection of professional-grade equipment. From espresso machines to precision grinders, we carry trusted brands.',
+                action: 'Shop Now'
+            },
+            'equipment-guide': {
+                title: 'Equipment Buying Guide',
+                content: 'Not sure which equipment is right for you? Our comprehensive buying guide helps you choose the perfect coffee equipment based on your brewing preferences and budget.',
+                action: 'Read Guide'
+            }
+        };
+        
+        serviceButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const service = this.getAttribute('data-service');
+                const info = serviceInfo[service];
+                
+                if (info) {
+                    modalTitle.textContent = info.title;
+                    modalContent.textContent = info.content;
+                    modalActionBtn.textContent = info.action;
+                    modal.show();
+                    
+                    // Log action for analytics
+                    console.log(`Service button clicked: ${service}`);
+                } else {
+                    // Fallback for undefined services
+                    alert(`Learn more about our ${service} service! Contact us for details.`);
+                    console.log(`Service interaction: ${service}`);
+                }
+            });
+        });
+        
+        // Modal action button handler
+        modalActionBtn.addEventListener('click', function() {
+            // You can customize this to redirect to specific pages or take specific actions
+            console.log('Modal action button clicked:', modalTitle.textContent);
+            alert('Redirecting to ' + this.textContent + '...');
+            modal.hide();
+        });
+        
+        // Add hover effects to service cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+                this.style.transition = 'all 0.3s ease';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Process step animation on scroll
+        const processSteps = document.querySelectorAll('.col-lg-3');
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const processObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const circle = entry.target.querySelector('.rounded-circle');
+                    if (circle) {
+                        circle.style.transform = 'scale(1.1)';
+                        circle.style.transition = 'transform 0.3s ease';
+                        setTimeout(() => {
+                            circle.style.transform = 'scale(1)';
+                        }, 300);
+                    }
+                }
+            });
+        }, observerOptions);
+        
+        processSteps.forEach(step => {
+            processObserver.observe(step);
+        });
+    });
+
+    // Toast notification function
+    function showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        toast.textContent = message;
+        
+        document.body.appendChild(toast);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+    
+    // Add click analytics
+    document.querySelectorAll('.btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const btnText = this.textContent.trim();
+            const serviceName = this.getAttribute('data-service') || 'unknown';
+            console.log(`Button clicked: "${btnText}" for service: ${serviceName}`);
+        });
+    });
+</script>
+{% endblock %}

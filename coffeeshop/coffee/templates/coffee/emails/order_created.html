@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order Created</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .order-info {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: bold;
+            color: #8B4513;
+        }
+        .value {
+            color: #333;
+        }
+        .order-items {
+            margin: 20px 0;
+        }
+        .item {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .item-header {
+            font-weight: bold;
+            color: #8B4513;
+            margin-bottom: 5px;
+        }
+        .item-details {
+            font-size: 14px;
+            color: #666;
+        }
+        .total-section {
+            background: #8B4513;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+        .coffee-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .status-badge {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="coffee-icon">☕</div>
+            <h1>New Order Created</h1>
+            <p>CoffeeShop - Order #{{ order.id }}</p>
+        </div>
+        
+        <div class="content">
+            <div class="order-info">
+                <h3>Order Information</h3>
+                
+                <div class="info-row">
+                    <span class="label">Order ID:</span>
+                    <span class="value">#{{ order.id }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">Customer:</span>
+                    <span class="value">{{ customer.username }} ({{ customer.email }})</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">Order Date:</span>
+                    <span class="value">{{ order_date|date:"F d, Y g:i A" }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">Status:</span>
+                    <span class="value"><span class="status-badge">{{ status }}</span></span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">Currency:</span>
+                    <span class="value">{{ currency }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="label">Total Items:</span>
+                    <span class="value">{{ total_items }}</span>
+                </div>
+            </div>
+            
+            <div class="order-items">
+                <h3>Order Items</h3>
+                {% for item in order_items %}
+                <div class="item">
+                    <div class="item-header">{{ item.menu_item.name }}</div>
+                    <div class="item-details">
+                        <strong>Quantity:</strong> {{ item.quantity }}<br>
+                        <strong>Price:</strong> {{ item.price }}
+                        {% if currency == 'INR' %}₹{% elif currency == 'GBP' %}£{% elif currency == 'EUR' %}€{% endif %}<br>
+                        <strong>Subtotal:</strong> {{ item.quantity|floatformat:0 }} × {{ item.price }} = 
+                        {% widthratio item.quantity 1 item.price as subtotal %}{{ subtotal }}
+                        {% if currency == 'INR' %}₹{% elif currency == 'GBP' %}£{% elif currency == 'EUR' %}€{% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p>No items in this order.</p>
+                {% endfor %}
+            </div>
+            
+            <div class="total-section">
+                <h2>Total Amount: {{ total_price }}
+                {% if currency == 'INR' %}₹{% elif currency == 'GBP' %}£{% elif currency == 'EUR' %}€{% endif %}</h2>
+            </div>
+            
+            <p><strong>A new order has been placed on your CoffeeShop website!</strong></p>
+            <p>Please process this order promptly and ensure customer satisfaction.</p>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from CoffeeShop<br>
+            <small>Generated on {{ order_date|date:"F d, Y g:i A" }}</small></p>
+        </div>
+    </div>
+</body>
+</html>

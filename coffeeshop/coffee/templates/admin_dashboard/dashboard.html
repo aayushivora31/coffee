@@ -1,0 +1,430 @@
+{% extends 'admin_dashboard/base.html' %}
+
+{% block content %}
+<!-- Dashboard Stats Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-uppercase fw-bold mb-1">Total Orders</div>
+                        <div class="stats-number" id="totalOrders">{{ total_orders|default:0 }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-receipt stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-uppercase fw-bold mb-1">Total Customers</div>
+                        <div class="stats-number" id="totalCustomers">{{ total_customers|default:0 }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-people stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-uppercase fw-bold mb-1">Today's Revenue</div>
+                        <div class="stats-number" id="todayRevenue">₹{{ today_revenue|default:0|floatformat:0 }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-currency-rupee stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-uppercase fw-bold mb-1">Popular Item</div>
+                        <div class="h6 mb-0" id="popularItem">
+                            {% if most_popular_item %}
+                                {{ most_popular_item.name }}
+                                <small class="d-block">{{ most_popular_item.quantity }} sold</small>
+                            {% else %}
+                                No data
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-star stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <!-- Sales Chart -->
+    <div class="col-xl-8 col-lg-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="m-0 fw-bold text-primary">Sales Overview</h6>
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" name="salesPeriod" id="sales7days" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary btn-sm" for="sales7days">7 Days</label>
+
+                    <input type="radio" class="btn-check" name="salesPeriod" id="sales30days" autocomplete="off">
+                    <label class="btn btn-outline-primary btn-sm" for="sales30days">30 Days</label>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Stats -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold text-primary">Top Categories</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions & Recent Orders -->
+<div class="row">
+    <!-- Quick Actions -->
+    <div class="col-xl-4 col-lg-5">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold text-primary">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'admin_products' %}" class="btn btn-coffee">
+                        <i class="bi bi-plus-circle me-2"></i>Add New Product
+                    </a>
+                    <button class="btn btn-outline-secondary" onclick="refreshStock()">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Refresh Stock Data
+                    </button>
+                    <a href="{% url 'admin_orders' %}?status=pending" class="btn btn-outline-warning">
+                        <i class="bi bi-clock me-2"></i>View Pending Orders
+                    </a>
+                    <button class="btn btn-outline-info" onclick="exportData()">
+                        <i class="bi bi-download me-2"></i>Export Reports
+                    </button>
+                </div>
+
+                <!-- Low Stock Alert -->
+                <div class="mt-4" id="lowStockAlert">
+                    <div class="alert alert-warning" role="alert">
+                        <h6 class="alert-heading"><i class="bi bi-exclamation-triangle me-2"></i>Low Stock Alert</h6>
+                        <div id="lowStockItems">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="col-xl-8 col-lg-7">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="m-0 fw-bold text-primary">Recent Orders</h6>
+                <a href="{% url 'admin_orders' %}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentOrdersTable">
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <div class="loading">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let salesChart, categoryChart;
+    
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeCharts();
+        loadDashboardData();
+        setupEventListeners();
+    });
+    
+    function initializeCharts() {
+        // Sales Chart
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: [],
+                    borderColor: '#8B4513',
+                    backgroundColor: 'rgba(139, 69, 19, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Revenue: ₹' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Category Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        categoryChart = new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: [
+                        '#8B4513', '#D2691E', '#CD853F', '#DEB887', 
+                        '#F4A460', '#DAA520', '#B22222'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    function loadDashboardData() {
+        fetch('/api/admin/dashboard/analytics/')
+            .then(response => response.json())
+            .then(data => {
+                updateStats(data);
+                updateSalesChart(data.sales_data);
+                updateCategoryChart(data.category_stats);
+                updateRecentOrders(data.recent_orders);
+                updateLowStockAlert(data.low_stock_items);
+            })
+            .catch(error => {
+                console.error('Error loading dashboard data:', error);
+                showToast('Error loading dashboard data', 'error');
+            });
+    }
+    
+    function updateStats(data) {
+        document.getElementById('totalOrders').textContent = data.total_orders;
+        document.getElementById('totalCustomers').textContent = data.total_customers;
+        document.getElementById('todayRevenue').textContent = '₹' + Number(data.today_revenue).toLocaleString();
+        
+        const popularItem = document.getElementById('popularItem');
+        if (data.most_popular_item) {
+            popularItem.innerHTML = `
+                ${data.most_popular_item.name}
+                <small class="d-block">${data.most_popular_item.quantity} sold</small>
+            `;
+        } else {
+            popularItem.textContent = 'No data';
+        }
+    }
+    
+    function updateSalesChart(salesData) {
+        const labels = salesData.map(item => {
+            const date = new Date(item.date);
+            return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+        });
+        const revenues = salesData.map(item => item.revenue);
+        
+        salesChart.data.labels = labels;
+        salesChart.data.datasets[0].data = revenues;
+        salesChart.update();
+    }
+    
+    function updateCategoryChart(categoryStats) {
+        const labels = categoryStats.map(item => item.menu_item__category);
+        const revenues = categoryStats.map(item => item.total_revenue);
+        
+        categoryChart.data.labels = labels;
+        categoryChart.data.datasets[0].data = revenues;
+        categoryChart.update();
+    }
+    
+    function updateRecentOrders(orders) {
+        const tbody = document.getElementById('recentOrdersTable');
+        
+        if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No recent orders</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = orders.map(order => `
+            <tr>
+                <td><small>#${order.order_id.substring(0, 8)}</small></td>
+                <td>${order.customer_name}</td>
+                <td>${order.formatted_total}</td>
+                <td>
+                    <span class="badge bg-${getStatusColor(order.status)}">
+                        ${order.status_display}
+                    </span>
+                </td>
+                <td><small>${new Date(order.created_at).toLocaleDateString()}</small></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="viewOrder('${order.id}')">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    function updateLowStockAlert(lowStockItems) {
+        const container = document.getElementById('lowStockItems');
+        
+        if (lowStockItems.length === 0) {
+            document.getElementById('lowStockAlert').style.display = 'none';
+            return;
+        }
+        
+        container.innerHTML = lowStockItems.map(item => `
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span>${item.name}</span>
+                <span class="badge badge-stock-${item.stock === 0 ? 'out' : 'low'}">
+                    ${item.stock} left
+                </span>
+            </div>
+        `).join('');
+    }
+    
+    function setupEventListeners() {
+        // Sales period toggle
+        document.querySelectorAll('input[name="salesPeriod"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const days = this.id === 'sales7days' ? 7 : 30;
+                loadSalesData(days);
+            });
+        });
+    }
+    
+    function loadSalesData(days) {
+        fetch(`/api/admin/sales-chart/?days=${days}`)
+            .then(response => response.json())
+            .then(data => {
+                updateSalesChart(data.sales_data);
+            })
+            .catch(error => {
+                console.error('Error loading sales data:', error);
+            });
+    }
+    
+    function getStatusColor(status) {
+        const colors = {
+            'pending': 'warning',
+            'confirmed': 'info',
+            'preparing': 'primary',
+            'ready': 'success',
+            'delivered': 'success',
+            'cancelled': 'danger'
+        };
+        return colors[status] || 'secondary';
+    }
+    
+    function refreshDashboard() {
+        loadDashboardData();
+        showToast('Dashboard refreshed', 'success');
+    }
+    
+    function refreshStock() {
+        fetch('/api/admin/products/', {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            loadDashboardData();
+            showToast('Stock data refreshed', 'success');
+        })
+        .catch(error => {
+            showToast('Error refreshing stock data', 'error');
+        });
+    }
+    
+    function exportData() {
+        showToast('Export feature coming soon', 'info');
+    }
+    
+    function viewOrder(orderId) {
+        window.location.href = `/dashboard/orders/${orderId}/`;
+    }
+</script>
+{% endblock %}

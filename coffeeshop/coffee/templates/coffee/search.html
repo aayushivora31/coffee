@@ -1,0 +1,588 @@
+{% extends 'coffee/base.html' %}
+{% extends 'coffee/base.html' %}
+{% load static %}
+{% load currency_filters %}
+
+{% block title %}Search Results - Coffee Shop{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="hero-section bg-coffee text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">
+            <i class="bi bi-search me-3"></i>Search Results
+        </h1>
+        {% if query %}
+            <p class="lead">Results for "{{ query }}"</p>
+        {% else %}
+            <p class="lead">Find your perfect coffee</p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Search Filters -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <form method="GET" action="{% url 'advanced_search' %}" class="row g-3">
+            <!-- Search Query -->
+            <div class="col-md-3">
+                <label for="searchQuery" class="form-label">Search</label>
+                <input type="text" class="form-control" id="searchQuery" name="q" value="{{ query }}" placeholder="Coffee, Latte, Pastry...">
+            </div>
+            
+            <!-- Category Filter -->
+            <div class="col-md-2">
+                <label for="categoryFilter" class="form-label">Category</label>
+                <select class="form-select" id="categoryFilter" name="category">
+                    <option value="">All Categories</option>
+                    {% for cat_value, cat_name in categories %}
+                        <option value="{{ cat_value }}" {% if category == cat_value %}selected{% endif %}>{{ cat_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Price Range -->
+            <div class="col-md-2">
+                <label for="minPrice" class="form-label">Min Price</label>
+                <input type="number" class="form-control" id="minPrice" name="min_price" value="{{ min_price }}" placeholder="0" step="0.01">
+            </div>
+            
+            <div class="col-md-2">
+                <label for="maxPrice" class="form-label">Max Price</label>
+                <input type="number" class="form-control" id="maxPrice" name="max_price" value="{{ max_price }}" placeholder="50" step="0.01">
+            </div>
+            
+            <!-- Sort Options -->
+            <div class="col-md-2">
+                <label for="sortBy" class="form-label">Sort By</label>
+                <select class="form-select" id="sortBy" name="sort">
+                    <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Name</option>
+                    <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Rating</option>
+                    <option value="popular" {% if sort_by == 'popular' %}selected{% endif %}>Most Popular</option>
+                </select>
+            </div>
+            
+            <div class="col-md-1">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-coffee w-100">
+                    <i class="bi bi-funnel"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Search Results -->
+<section class="py-5">
+    <div class="container">
+        <!-- Results Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>{{ total_results }} result{{ total_results|pluralize }} found</h3>
+            
+            {% if query or category or min_price or max_price %}
+                <a href="{% url 'advanced_search' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle me-1"></i>Clear Filters
+                </a>
+            {% endif %}
+        </div>
+        
+        <!-- Results Grid -->
+        {% if items %}
+            <div class="row g-4">
+                {% for item in items %}
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="card h-100 menu-card">
+                            {% if item.is_featured %}
+                                <div class="position-absolute top-0 start-0 bg-warning text-dark px-2 py-1 rounded-bottom-end" style="z-index: 10;">
+                                    <i class="bi bi-star-fill me-1"></i>Featured
+                                </div>
+                            {% endif %}
+                            
+                            {% if item.image_url %}
+                                <img src="{{ item.image_url }}" class="card-img-top menu-img" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="bg-coffee-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                    <i class="bi bi-cup-hot text-coffee" style="font-size: 3rem;"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">{{ item.name }}</h6>
+                                <p class="card-text text-muted small">{{ item.description|truncatewords:15 }}</p>
+                                
+                                <!-- Category Badge -->
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary">{{ item.get_category_display }}</span>
+                                </div>
+                                
+                                <!-- Rating Display -->
+                                {% if item.rating_count > 0 %}
+                                    <div class="mb-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stars me-2">
+                                                {% with item.star_display as stars %}
+                                                    {% for i in stars.full_stars %}★{% endfor %}
+                                                    {% if stars.half_star %}☆{% endif %}
+                                                    {% for i in stars.empty_stars %}☆{% endfor %}
+                                                {% endwith %}
+                                            </div>
+                                            <small class="text-muted">({{ item.rating_count }})</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="fw-bold text-coffee mb-3 fs-6">{{ currency_symbol }}{{ item.price }}</div>
+                                
+                                <div class="mt-auto">
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-coffee btn-sm add-to-cart-btn" data-item-id="{{ item.id }}">
+                                            <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                        </button>
+                                        
+                                        <div class="d-flex gap-1">
+                                            {% if user.is_authenticated %}
+                                                <button class="btn btn-outline-danger btn-sm flex-fill wishlist-btn" 
+                                                        data-item-id="{{ item.id }}">
+                                                    <i class="bi bi-heart"></i>
+                                                </button>
+                                            {% endif %}
+                                            
+                                            <button class="btn btn-outline-info btn-sm flex-fill item-details-btn" 
+                                                    data-item-id="{{ item.id }}">
+                                                <i class="bi bi-info-circle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if items.has_other_pages %}
+                <nav aria-label="Search results pagination" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        {% if items.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ items.previous_page_number }}">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for page_num in items.paginator.page_range %}
+                            {% if page_num == items.number %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ page_num }}</span>
+                                </li>
+                            {% elif page_num > items.number|add:'-3' and page_num < items.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_num }}">
+                                        {{ page_num }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if items.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ items.next_page_number }}">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+            
+        {% else %}
+            <!-- No Results -->
+            <div class="text-center py-5">
+                <i class="bi bi-search text-coffee" style="font-size: 4rem;"></i>
+                <h3 class="mt-3">No results found</h3>
+                <p class="text-muted">Try adjusting your search criteria or browse our full menu.</p>
+                <a href="{% url 'menu' %}" class="btn btn-coffee btn-lg">
+                    <i class="bi bi-cup-hot me-2"></i>Browse Full Menu
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Hidden form for CSRF token -->
+<form style="display: none;">
+    {% csrf_token %}
+</form>
+
+<style>
+.search-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.search-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.stars {
+    color: #ffc107;
+    font-size: 1rem;
+}
+
+.menu-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.pagination .page-link {
+    color: #8B4513;
+    border-color: #8B4513;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #8B4513;
+    border-color: #8B4513;
+}
+
+.pagination .page-link:hover {
+    background-color: #f8f9fa;
+    border-color: #8B4513;
+    color: #5a2e0a;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #8B4513;
+    box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+}
+
+.btn-coffee {
+    background-color: #8B4513;
+    border-color: #8B4513;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-coffee:hover {
+    background-color: #5a2e0a;
+    border-color: #5a2e0a;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.bg-coffee {
+    background-color: #8B4513 !important;
+}
+
+.text-coffee {
+    color: #8B4513 !important;
+}
+
+/* Loading Animation */
+.btn-loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Enhanced notification styling */
+.toast-notification {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+</style>
+
+<script>
+// Enhanced add to cart functionality with loading states
+function addToCart(itemId) {
+    const button = document.querySelector(`[data-item-id="${itemId}"]`);
+    if (!button || button.disabled) return;
+    
+    // Show loading state
+    const originalContent = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Adding...';
+    button.disabled = true;
+    button.classList.add('btn-loading');
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    if (!csrfToken) {
+        showToast('Security token not found. Please refresh the page.', 'error');
+        resetButton(button, originalContent);
+        return;
+    }
+    
+    fetch(`/cart/add/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'quantity=1'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            button.innerHTML = '<i class="bi bi-check-circle me-1"></i>Added!';
+            button.classList.remove('btn-coffee', 'btn-loading');
+            button.classList.add('btn-success');
+            showToast(data.message || 'Item added to cart!', 'success');
+            
+            // Update cart count
+            updateCartCount(data.cart_count);
+            
+            // Reset button after delay
+            setTimeout(() => {
+                resetButton(button, originalContent);
+            }, 2000);
+        } else {
+            throw new Error(data.message || 'Failed to add item to cart');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast(error.message || 'Network error. Please try again.', 'error');
+        resetButton(button, originalContent);
+    });
+}
+
+// Helper function to reset button state
+function resetButton(button, originalContent) {
+    button.innerHTML = originalContent;
+    button.classList.remove('btn-success', 'btn-loading');
+    button.classList.add('btn-coffee');
+    button.disabled = false;
+}
+
+function showItemDetails(itemId) {
+    showToast('Item details feature coming soon!', 'info');
+}
+
+// Enhanced toast notification system with icons
+function showToast(message, type = 'info') {
+    // Remove existing toasts
+    const existingToasts = document.querySelectorAll('.toast-notification');
+    existingToasts.forEach(toast => toast.remove());
+    
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'error' ? 'danger' : type} position-fixed toast-notification`;
+    toast.style.cssText = 'top: 80px; right: 20px; z-index: 9999; min-width: 300px; opacity: 0; transition: opacity 0.3s ease; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);';
+    
+    const iconMap = {
+        success: 'check-circle-fill',
+        error: 'exclamation-triangle-fill',
+        warning: 'exclamation-triangle-fill',
+        info: 'info-circle-fill'
+    };
+    
+    toast.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="bi bi-${iconMap[type] || iconMap.info} me-2"></i>
+            <span class="flex-grow-1">${message}</span>
+            <button type="button" class="btn-close ms-2" aria-label="Close"></button>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Fade in
+    setTimeout(() => {
+        toast.style.opacity = '1';
+    }, 100);
+    
+    // Close button functionality
+    const closeBtn = toast.querySelector('.btn-close');
+    closeBtn.addEventListener('click', () => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    });
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, 4000);
+}
+
+// Update cart count in navigation
+function updateCartCount(count) {
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = count || 0;
+        cartCountElement.style.display = (count && count > 0) ? 'inline' : 'none';
+    }
+    
+    // Fallback: fetch count if not provided
+    if (count === undefined) {
+        fetch('/api/cart-count/', {
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (cartCountElement) {
+                cartCountElement.textContent = data.count || 0;
+                cartCountElement.style.display = data.count > 0 ? 'inline' : 'none';
+            }
+        })
+        .catch(error => console.log('Error updating cart count:', error));
+    }
+}
+
+// Initialize page functionality
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Search page loaded successfully');
+    
+    // Initialize image error handling
+    document.querySelectorAll('.menu-img').forEach(img => {
+        img.addEventListener('error', function() {
+            this.style.display = 'none';
+            const placeholder = this.nextElementSibling;
+            if (placeholder && placeholder.classList.contains('menu-img-placeholder')) {
+                placeholder.style.display = 'flex';
+            }
+        });
+    });
+    
+    // Add event listeners for buttons
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            addToCart(itemId);
+        });
+    });
+    
+    document.querySelectorAll('.wishlist-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            toggleWishlist(itemId, this);
+        });
+    });
+    
+    document.querySelectorAll('.item-details-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.dataset.itemId;
+            showItemDetails(itemId);
+        });
+    });
+    
+    // Load wishlist status for authenticated users
+    if (document.querySelector('.wishlist-btn')) {
+        loadWishlistStatus();
+    }
+});
+
+function loadWishlistStatus() {
+    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+    
+    wishlistButtons.forEach(button => {
+        const itemId = button.dataset.itemId;
+        
+        fetch(`/api/wishlist/status/${itemId}/`, {
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        })
+        .then(response => response.json())
+        .then(data => {
+            const icon = button.querySelector('i');
+            if (data.in_wishlist) {
+                icon.className = 'bi bi-heart-fill';
+                button.classList.remove('btn-outline-danger');
+                button.classList.add('btn-danger');
+            }
+        })
+        .catch(error => console.log('Error loading wishlist status:', error));
+    });
+}
+
+function toggleWishlist(itemId, button) {
+    // Check if user is authenticated by looking for wishlist buttons (only shown for authenticated users)
+    const isAuthenticated = document.querySelector('.wishlist-btn') !== null;
+    
+    if (!isAuthenticated) {
+        showToast('Please login to add items to wishlist', 'warning');
+        setTimeout(() => {
+            window.location.href = '/auth/login/?next=/search/';
+        }, 1500);
+        return;
+    }
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+    
+    if (!csrfToken) {
+        showToast('Security token not found. Please refresh the page.', 'error');
+        return;
+    }
+    
+    const icon = button.querySelector('i');
+    
+    fetch(`/api/wishlist/add/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            if (data.in_wishlist) {
+                icon.className = 'bi bi-heart-fill';
+                button.classList.remove('btn-outline-danger');
+                button.classList.add('btn-danger');
+                showToast('Added to wishlist!', 'success');
+            } else {
+                icon.className = 'bi bi-heart';
+                button.classList.remove('btn-danger');
+                button.classList.add('btn-outline-danger');
+                showToast('Removed from wishlist', 'info');
+            }
+        } else {
+            showToast(data.message || 'Error updating wishlist', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error updating wishlist', 'error');
+    });
+}
+</script>
+
+{% endblock %}

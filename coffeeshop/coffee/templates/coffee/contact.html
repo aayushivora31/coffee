@@ -1,0 +1,420 @@
+{% extends 'coffee/base.html' %}
+
+{% block title %}Contact Us - CoffeeShop{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<section class="bg-coffee text-white py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                <h1 class="display-4 fw-bold mb-3">Contact Us</h1>
+                <p class="lead">We'd love to hear from you. Get in touch with us today!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <!-- Contact Form -->
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-coffee text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-envelope-fill me-2"></i>Send us a Message
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- Django Messages -->
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'error' %}exclamation-triangle-fill{% else %}info-circle-fill{% endif %} me-2"></i>
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+                        <form method="post" id="contactForm" novalidate>
+                            {% csrf_token %}
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                                        <i class="bi bi-person-fill me-1"></i>Your Name *
+                                    </label>
+                                    {{ form.name }}
+                                    <div class="invalid-feedback">
+                                        Please provide your name.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                                        <i class="bi bi-envelope-fill me-1"></i>Email Address *
+                                    </label>
+                                    {{ form.email }}
+                                    <div class="invalid-feedback">
+                                        Please provide a valid email address.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <label for="{{ form.message.id_for_label }}" class="form-label">
+                                        <i class="bi bi-chat-text-fill me-1"></i>Your Message *
+                                    </label>
+                                    {{ form.message }}
+                                    <div class="invalid-feedback">
+                                        Please provide your message.
+                                    </div>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-coffee btn-lg" id="submitContactForm">
+                                        <i class="bi bi-send-fill me-2"></i>Send Message
+                                        <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true" style="display: none;"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary btn-lg ms-2" id="clearForm">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>Clear Form
+                                    </button>
+                                    <small class="form-text text-muted mt-2 d-block">
+                                        <i class="bi bi-shield-check me-1"></i>
+                                        Your message will be sent securely. Email notifications are sent to aayushivora31@gmail.com
+                                    </small>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="card shadow-lg border-0 h-100">
+                    <div class="card-header bg-coffee-light">
+                        <h4 class="mb-0 text-coffee">
+                            <i class="bi bi-geo-alt-fill me-2"></i>Get in Touch
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="contact-info">
+                            <div class="mb-4">
+                                <h6 class="text-coffee mb-2">
+                                    <i class="bi bi-geo-alt-fill me-2"></i>Address
+                                </h6>
+                                <p class="mb-0">123 Coffee Street<br>Bean City, BC 12345<br>India</p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-coffee mb-2">
+                                    <i class="bi bi-telephone-fill me-2"></i>Phone
+                                </h6>
+                                <p class="mb-0">
+                                    <a href="tel:+919876543210" class="text-decoration-none">+91 98765 43210</a>
+                                </p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-coffee mb-2">
+                                    <i class="bi bi-envelope-fill me-2"></i>Email
+                                </h6>
+                                <p class="mb-0">
+                                    <a href="mailto:info@coffeeshop.com" class="text-decoration-none">info@coffeeshop.com</a>
+                                </p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="text-coffee mb-2">
+                                    <i class="bi bi-clock-fill me-2"></i>Hours
+                                </h6>
+                                <p class="mb-1">Mon - Sun: 7:00 AM - 8:00 PM</p>
+                                <p class="mb-1">Sat: 8:00 AM - 9:00 PM</p>
+                                <p class="mb-0">Sun: 8:00 AM - 7:00 PM</p>
+                            </div>
+                            
+                            <div>
+                                <h6 class="text-coffee mb-3">
+                                    <i class="bi bi-share-fill me-2"></i>Follow Us
+                                </h6>
+                                <div class="d-flex gap-3">
+                                    <a href="#" class="text-coffee fs-4" title="Facebook">
+                                        <i class="bi bi-facebook"></i>
+                                    </a>
+                                    <a href="#" class="text-coffee fs-4" title="Twitter">
+                                        <i class="bi bi-twitter"></i>
+                                    </a>
+                                    <a href="#" class="text-coffee fs-4" title="Instagram">
+                                        <i class="bi bi-instagram"></i>
+                                    </a>
+                                    <a href="#" class="text-coffee fs-4" title="LinkedIn">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-4" data-aos="fade-up">
+            <h3 class="text-coffee mb-3">Find Us Here</h3>
+            <p class="lead">Visit our coffee shop for the full experience</p>
+        </div>
+        
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-lg-10">
+                <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+                    <div class="ratio ratio-21x9">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.4845394298653!2d77.20854631490183!3d28.627025582406196!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd8a88b6d2f3%3A0x9d1a5a5b5b5b5b5b!2sDelhi%2C%20India!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="CoffeeShop Location">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h3 class="text-coffee mb-3">Frequently Asked Questions</h3>
+            <p class="lead">Quick answers to common questions</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion" data-aos="fade-up" data-aos-delay="200">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                What are your opening hours?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We're open Monday through Friday from 7:00 AM to 8:00 PM, Saturday from 8:00 AM to 9:00 PM, and Sunday from 8:00 AM to 7:00 PM.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                Do you offer coffee delivery?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! We offer delivery within a 5-mile radius of our shop. You can also subscribe to our coffee delivery service for regular shipments of fresh beans.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                Can I book your space for events?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! We offer event catering services and can accommodate private bookings. Please contact us with your event details and we'll create a custom package for you.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                Do you offer barista training?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, we offer comprehensive barista training programs for all skill levels. Our courses cover everything from basic brewing techniques to advanced latte art.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Form validation and submission
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('contactForm');
+        const clearBtn = document.getElementById('clearForm');
+        
+        // Client-side validation
+        function validateForm() {
+            let isValid = true;
+            const inputs = form.querySelectorAll('input[required], textarea[required]');
+            
+            inputs.forEach(input => {
+                const value = input.value.trim();
+                
+                if (!value) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    input.classList.remove('is-invalid');
+                    input.classList.add('is-valid');
+                }
+                
+                // Email validation
+                if (input.type === 'email' && value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        input.classList.add('is-invalid');
+                        input.classList.remove('is-valid');
+                        isValid = false;
+                    }
+                }
+            });
+            
+            return isValid;
+        }
+        
+        // Real-time validation
+        form.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.classList.add('is-invalid');
+                } else if (this.type === 'email' && this.value.trim()) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (emailRegex.test(this.value)) {
+                        this.classList.remove('is-invalid');
+                        this.classList.add('is-valid');
+                    } else {
+                        this.classList.add('is-invalid');
+                        this.classList.remove('is-valid');
+                    }
+                } else if (this.value.trim()) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                if (this.classList.contains('is-invalid') && this.value.trim()) {
+                    this.classList.remove('is-invalid');
+                    if (this.type !== 'email' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value)) {
+                        this.classList.add('is-valid');
+                    }
+                }
+            });
+        });
+        
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            if (!validateForm()) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Show error message
+                showToast('Please fill in all required fields correctly.', 'danger');
+            }
+            form.classList.add('was-validated');
+        });
+        
+        // Clear form
+        clearBtn.addEventListener('click', function() {
+            form.reset();
+            form.classList.remove('was-validated');
+            form.querySelectorAll('.form-control').forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
+            showToast('Form cleared successfully.', 'info');
+        });
+        
+        // Smooth scroll to form if there are messages
+        if (document.querySelector('.alert')) {
+            setTimeout(() => {
+                document.querySelector('#contactForm').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 500);
+        }
+    });
+
+    // Toast notification function
+    function showToast(message, type = 'info') {
+        const toastContainer = document.createElement('div');
+        toastContainer.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999;';
+        
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show`;
+        toast.innerHTML = `
+            <i class="bi bi-${type === 'danger' ? 'exclamation-triangle' : type === 'success' ? 'check-circle' : 'info-circle'}-fill me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        toastContainer.appendChild(toast);
+        document.body.appendChild(toastContainer);
+        
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+            toastContainer.remove();
+        }, 4000);
+    }
+
+    // Social media link analytics
+    document.querySelectorAll('.contact-info a, .footer a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('tel:') || href.startsWith('mailto:')) {
+                console.log(`Contact method used: ${href}`);
+            }
+        });
+    });
+
+    // FAQ interaction tracking
+    document.querySelectorAll('.accordion-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const question = this.textContent.trim();
+            console.log(`FAQ opened: ${question}`);
+        });
+    });
+
+    // Add loading spinner on form submission
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const spinner = submitBtn.querySelector('.spinner-border');
+        const icon = submitBtn.querySelector('.bi-send-fill');
+        
+        // Show loading state
+        if (spinner && icon) {
+            icon.style.display = 'none';
+            spinner.style.display = 'inline-block';
+        }
+        submitBtn.disabled = true;
+        
+        // Show immediate feedback
+        showToast('Sending message and email notification to aayushivora31@gmail.com...', 'info');
+        
+        // Note: Form will submit normally to Django backend
+        // The page will reload with success/error messages from Django
+    });
+</script>
+{% endblock %}

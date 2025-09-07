@@ -1,0 +1,460 @@
+{% extends 'admin_dashboard/base.html' %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h3 mb-0">Reports & Analytics</h2>
+    <div class="btn-group" role="group">
+        <button class="btn btn-outline-primary" onclick="refreshReports()">
+            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+        </button>
+        <button class="btn btn-outline-success" onclick="exportReport()">
+            <i class="bi bi-download me-1"></i>Export
+        </button>
+    </div>
+</div>
+
+<!-- Date Range Filter -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label for="reportType" class="form-label">Report Type</label>
+                <select class="form-select" id="reportType" onchange="loadReport()">
+                    <option value="sales">Sales Report</option>
+                    <option value="products">Product Performance</option>
+                    <option value="customers">Customer Analysis</option>
+                    <option value="revenue">Revenue Analysis</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="dateRange" class="form-label">Period</label>
+                <select class="form-select" id="dateRange" onchange="updateDateRange()">
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="90">Last 3 Months</option>
+                    <option value="365">Last Year</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="reportDateFrom" class="form-label">From Date</label>
+                <input type="date" class="form-control" id="reportDateFrom">
+            </div>
+            <div class="col-md-2">
+                <label for="reportDateTo" class="form-label">To Date</label>
+                <input type="date" class="form-control" id="reportDateTo">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <button class="btn btn-coffee d-block w-100" onclick="generateReport()">
+                    <i class="bi bi-graph-up me-1"></i>Generate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Key Metrics Row -->
+<div class="row mb-4" id="metricsRow">
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body">
+                <h6 class="text-uppercase fw-bold mb-1">Total Revenue</h6>
+                <div class="stats-number" id="totalRevenue">₹0</div>
+                <small class="text-light" id="revenueChange">+0% from last period</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body">
+                <h6 class="text-uppercase fw-bold mb-1">Total Orders</h6>
+                <div class="stats-number" id="totalOrdersReport">0</div>
+                <small class="text-light" id="ordersChange">+0% from last period</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body">
+                <h6 class="text-uppercase fw-bold mb-1">Average Order Value</h6>
+                <div class="stats-number" id="avgOrderValue">₹0</div>
+                <small class="text-light" id="aovChange">+0% from last period</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stats-card">
+            <div class="card-body">
+                <h6 class="text-uppercase fw-bold mb-1">New Customers</h6>
+                <div class="stats-number" id="newCustomersReport">0</div>
+                <small class="text-light" id="customersChange">+0% from last period</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <!-- Main Chart -->
+    <div class="col-xl-8">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold text-primary" id="mainChartTitle">Revenue Over Time</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Secondary Chart -->
+    <div class="col-xl-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="m-0 fw-bold text-primary" id="secondaryChartTitle">Top Categories</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="secondaryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Data Table -->
+<div class="card">
+    <div class="card-header">
+        <h6 class="m-0 fw-bold text-primary" id="tableTitle">Detailed Report</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover" id="reportTable">
+                <thead id="reportTableHead">
+                    <!-- Table headers will be populated by JavaScript -->
+                </thead>
+                <tbody id="reportTableBody">
+                    <tr>
+                        <td colspan="100%" class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let mainChart, secondaryChart;
+    let currentReportType = 'sales';
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeCharts();
+        setDefaultDates();
+        loadReport();
+    });
+    
+    function initializeCharts() {
+        // Main Chart
+        const mainCtx = document.getElementById('mainChart').getContext('2d');
+        mainChart = new Chart(mainCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [],
+                    borderColor: '#8B4513',
+                    backgroundColor: 'rgba(139, 69, 19, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Secondary Chart
+        const secondaryCtx = document.getElementById('secondaryChart').getContext('2d');
+        secondaryChart = new Chart(secondaryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: [
+                        '#8B4513', '#D2691E', '#CD853F', '#DEB887', 
+                        '#F4A460', '#DAA520', '#B22222'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+    
+    function setDefaultDates() {
+        const today = new Date();
+        const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+        
+        document.getElementById('reportDateFrom').value = lastWeek.toISOString().split('T')[0];
+        document.getElementById('reportDateTo').value = today.toISOString().split('T')[0];
+    }
+    
+    function updateDateRange() {
+        const range = document.getElementById('dateRange').value;
+        const today = new Date();
+        
+        if (range === 'custom') {
+            document.getElementById('reportDateFrom').disabled = false;
+            document.getElementById('reportDateTo').disabled = false;
+            return;
+        }
+        
+        document.getElementById('reportDateFrom').disabled = true;
+        document.getElementById('reportDateTo').disabled = true;
+        
+        const days = parseInt(range);
+        const fromDate = new Date(today.getTime() - days * 24 * 60 * 60 * 1000);
+        
+        document.getElementById('reportDateFrom').value = fromDate.toISOString().split('T')[0];
+        document.getElementById('reportDateTo').value = today.toISOString().split('T')[0];
+        
+        generateReport();
+    }
+    
+    function loadReport() {
+        currentReportType = document.getElementById('reportType').value;
+        generateReport();
+    }
+    
+    function generateReport() {
+        const reportType = document.getElementById('reportType').value;
+        const dateFrom = document.getElementById('reportDateFrom').value;
+        const dateTo = document.getElementById('reportDateTo').value;
+        
+        const params = new URLSearchParams({
+            type: reportType,
+            date_from: dateFrom,
+            date_to: dateTo
+        });
+        
+        fetch(`/api/admin/reports/?${params}`)
+            .then(response => response.json())
+            .then(data => {
+                updateMetrics(data.metrics);
+                updateMainChart(data.chart_data);
+                updateSecondaryChart(data.secondary_chart);
+                updateTable(data.table_data);
+                updateTitles(reportType);
+            })
+            .catch(error => {
+                console.error('Error generating report:', error);
+                showToast('Error generating report', 'error');
+            });
+    }
+    
+    function updateMetrics(metrics) {
+        document.getElementById('totalRevenue').textContent = '₹' + Number(metrics.total_revenue || 0).toLocaleString('en-IN');
+        document.getElementById('totalOrdersReport').textContent = metrics.total_orders || 0;
+        document.getElementById('avgOrderValue').textContent = '₹' + Number(metrics.avg_order_value || 0).toLocaleString('en-IN');
+        document.getElementById('newCustomersReport').textContent = metrics.new_customers || 0;
+        
+        // Update change indicators
+        document.getElementById('revenueChange').textContent = `${metrics.revenue_change || 0}% from last period`;
+        document.getElementById('ordersChange').textContent = `${metrics.orders_change || 0}% from last period`;
+        document.getElementById('aovChange').textContent = `${metrics.aov_change || 0}% from last period`;
+        document.getElementById('customersChange').textContent = `${metrics.customers_change || 0}% from last period`;
+    }
+    
+    function updateMainChart(chartData) {
+        const labels = chartData.map(item => {
+            const date = new Date(item.date || item.label);
+            return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+        });
+        const values = chartData.map(item => item.value || item.revenue || 0);
+        
+        mainChart.data.labels = labels;
+        mainChart.data.datasets[0].data = values;
+        
+        // Update chart label based on report type
+        const reportType = document.getElementById('reportType').value;
+        mainChart.data.datasets[0].label = reportType === 'sales' ? 'Revenue (₹)' : 
+                                           reportType === 'products' ? 'Orders' :
+                                           reportType === 'customers' ? 'New Customers' : 'Revenue (₹)';
+        
+        mainChart.update();
+    }
+    
+    function updateSecondaryChart(chartData) {
+        if (!chartData || chartData.length === 0) {
+            secondaryChart.data.labels = ['No Data'];
+            secondaryChart.data.datasets[0].data = [1];
+        } else {
+            secondaryChart.data.labels = chartData.map(item => item.label || item.name);
+            secondaryChart.data.datasets[0].data = chartData.map(item => item.value || item.count);
+        }
+        
+        secondaryChart.update();
+    }
+    
+    function updateTable(tableData) {
+        const reportType = document.getElementById('reportType').value;
+        const thead = document.getElementById('reportTableHead');
+        const tbody = document.getElementById('reportTableBody');
+        
+        // Set table headers based on report type
+        const headers = {
+            sales: ['Date', 'Orders', 'Revenue', 'Avg Order Value'],
+            products: ['Product', 'Category', 'Orders', 'Revenue', 'Stock'],
+            customers: ['Customer', 'Orders', 'Total Spent', 'Last Order', 'Status'],
+            revenue: ['Period', 'Revenue', 'Growth', 'Orders', 'AOV']
+        };
+        
+        thead.innerHTML = `<tr>${headers[reportType].map(h => `<th>${h}</th>`).join('')}</tr>`;
+        
+        if (!tableData || tableData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="${headers[reportType].length}" class="text-center text-muted">No data available</td></tr>`;
+            return;
+        }
+        
+        // Generate table rows based on report type
+        let rows = '';
+        tableData.forEach(item => {
+            switch(reportType) {
+                case 'sales':
+                    rows += `
+                        <tr>
+                            <td>${new Date(item.date).toLocaleDateString('en-IN')}</td>
+                            <td>${item.orders || 0}</td>
+                            <td>₹${Number(item.revenue || 0).toLocaleString('en-IN')}</td>
+                            <td>₹${Number(item.avg_order_value || 0).toLocaleString('en-IN')}</td>
+                        </tr>
+                    `;
+                    break;
+                case 'products':
+                    rows += `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.category || 'N/A'}</td>
+                            <td>${item.orders || 0}</td>
+                            <td>₹${Number(item.revenue || 0).toLocaleString('en-IN')}</td>
+                            <td><span class="badge bg-${getStockColor(item.stock)}">${item.stock || 0}</span></td>
+                        </tr>
+                    `;
+                    break;
+                case 'customers':
+                    rows += `
+                        <tr>
+                            <td>${item.name || item.username}</td>
+                            <td>${item.orders || 0}</td>
+                            <td>₹${Number(item.total_spent || 0).toLocaleString('en-IN')}</td>
+                            <td>${item.last_order ? new Date(item.last_order).toLocaleDateString('en-IN') : 'Never'}</td>
+                            <td><span class="badge bg-${item.is_active ? 'success' : 'secondary'}">${item.is_active ? 'Active' : 'Inactive'}</span></td>
+                        </tr>
+                    `;
+                    break;
+                case 'revenue':
+                    rows += `
+                        <tr>
+                            <td>${item.period}</td>
+                            <td>₹${Number(item.revenue || 0).toLocaleString('en-IN')}</td>
+                            <td><span class="text-${item.growth >= 0 ? 'success' : 'danger'}">${item.growth || 0}%</span></td>
+                            <td>${item.orders || 0}</td>
+                            <td>₹${Number(item.aov || 0).toLocaleString('en-IN')}</td>
+                        </tr>
+                    `;
+                    break;
+            }
+        });
+        
+        tbody.innerHTML = rows;
+    }
+    
+    function updateTitles(reportType) {
+        const titles = {
+            sales: {
+                main: 'Sales Over Time',
+                secondary: 'Top Categories',
+                table: 'Daily Sales Data'
+            },
+            products: {
+                main: 'Product Performance',
+                secondary: 'Category Distribution',
+                table: 'Product Performance Data'
+            },
+            customers: {
+                main: 'Customer Growth',
+                secondary: 'Customer Segments',
+                table: 'Customer Analysis Data'
+            },
+            revenue: {
+                main: 'Revenue Analysis',
+                secondary: 'Revenue Sources',
+                table: 'Revenue Breakdown'
+            }
+        };
+        
+        document.getElementById('mainChartTitle').textContent = titles[reportType].main;
+        document.getElementById('secondaryChartTitle').textContent = titles[reportType].secondary;
+        document.getElementById('tableTitle').textContent = titles[reportType].table;
+    }
+    
+    function getStockColor(stock) {
+        if (stock === 0) return 'danger';
+        if (stock <= 5) return 'warning';
+        return 'success';
+    }
+    
+    function refreshReports() {
+        generateReport();
+        showToast('Reports refreshed', 'success');
+    }
+    
+    function exportReport() {
+        const reportType = document.getElementById('reportType').value;
+        const dateFrom = document.getElementById('reportDateFrom').value;
+        const dateTo = document.getElementById('reportDateTo').value;
+        
+        const params = new URLSearchParams({
+            type: reportType,
+            date_from: dateFrom,
+            date_to: dateTo,
+            format: 'csv'
+        });
+        
+        window.open(`/api/admin/reports/export/?${params}`, '_blank');
+    }
+</script>
+{% endblock %}
