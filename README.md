@@ -198,3 +198,82 @@ For technical support or questions about the admin dashboard system:
 Run `COMPLETE_SETUP.bat` and start managing your coffee shop business with the powerful admin dashboard system!
 
 **Happy Coding! ☕**
+
+# CoffeeShop Website
+
+A responsive static website for a coffee shop, converted from Django templates to static HTML for GitHub Pages deployment.
+
+## 🌐 Live Demo
+
+[Your site will be available here after deployment](https://[your-username].github.io/[your-repo-name]/)
+
+## 📋 Features
+
+- Fully responsive design using Bootstrap 5
+- Modern coffee shop theme with warm color palette
+- Complete website with multiple pages:
+  - Home page
+  - About page
+  - Menu page
+  - Services page
+  - Contact page
+  - Shopping cart
+  - Checkout page
+- Smooth animations with AOS (Animate On Scroll)
+- Interactive elements with JavaScript
+
+## 🚀 Deployment to GitHub Pages
+
+1. Create a new repository on GitHub
+2. Push this code to your repository:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit - CoffeeShop website"
+   git branch -M main
+   git remote add origin https://github.com/your-username/your-repo-name.git
+   git push -u origin main
+   ```
+3. Go to your repository settings on GitHub
+4. Scroll down to the "Pages" section
+5. Under "Source", select "Deploy from a branch"
+6. Choose "main" branch and "/(root)" folder
+7. Click "Save"
+8. Your site will be published at `https://[your-username].github.io/[your-repo-name]/`
+
+## 📁 Project Structure
+
+```
+.
+├── index.html          # Home page
+├── about.html          # About page
+├── menu.html           # Menu page
+├── services.html       # Services page
+├── contact.html        # Contact page
+├── cart.html           # Shopping cart page
+├── checkout.html       # Checkout page
+├── css/                # Stylesheets directory
+│   ├── style.css       # Main stylesheet
+│   └── images.css      # Image-related styles
+└── README.md           # This file
+```
+
+## 🎨 Design Elements
+
+- Coffee-themed color scheme (browns, tans, and accent colors)
+- Responsive grid layout that works on mobile, tablet, and desktop
+- Interactive navigation with active page highlighting
+- Animated elements that trigger on scroll
+- Card-based design for content sections
+- Custom-styled buttons and form elements
+
+## ⚠️ Important Notes
+
+- This is a static website with no backend functionality
+- Contact forms and shopping cart features are for demonstration only
+- All images are loaded from external sources (Pexels)
+- The site is designed to be hosted on GitHub Pages with no server requirements
+
+## 📞 Support
+
+For issues with the website, please create an issue in this repository.

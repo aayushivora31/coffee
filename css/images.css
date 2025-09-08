@@ -1,0 +1,55 @@
+/* Placeholder image styling for when images are not available */
+.placeholder-image {
+    background: linear-gradient(135deg, var(--coffee-light) 0%, var(--coffee-secondary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--coffee-primary);
+    font-size: 2rem;
+    border-radius: 8px;
+}
+
+.menu-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.featured-item-image {
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+.team-member-image {
+    height: 300px;
+    object-fit: cover;
+}
+
+/* Image error handling */
+img[src=""], img:not([src]) {
+    display: none;
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-container .placeholder-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.image-container img {
+    position: relative;
+    z-index: 1;
+}
+
+.image-container img.hidden {
+    display: none;
+}

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Contact CoffeeShop for inquiries, feedback, or to visit our coffee shop.">
+  <meta name="keywords" content="contact coffee shop, coffee shop address, coffee shop phone number">
+  <meta name="author" content="Coffee Shop">
+  
+  <title>Contact Us - CoffeeShop</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/images.css">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
+  <!-- Custom Navigation Styles -->
+  <style>
+    /* Enhanced Navigation Bar Styling */
+    .navbar {
+      background: linear-gradient(135deg, #8B4513, #6B3410);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+      padding: 0.8rem 0;
+    }
+    
+    .navbar.scrolled {
+      background: rgba(139, 69, 19, 0.95);
+      backdrop-filter: blur(15px);
+      padding: 0.5rem 0;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #fff !important;
+      transition: all 0.3s ease;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .navbar-brand:hover {
+      transform: scale(1.05);
+      color: #ffd700 !important;
+    }
+    
+    /* Perfect Center Navigation Links */
+    .navbar-nav.mx-auto {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    
+    .navbar-nav.mx-auto .nav-link {
+      color: #fff !important;
+      font-weight: 600;
+      margin: 0 8px;
+      padding: 10px 15px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      font-size: 1rem;
+    }
+    
+    .navbar-nav.mx-auto .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .navbar-nav.mx-auto .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    
+    /* Perfect Right Corner Action Icons */
+    .navbar-nav.ms-auto {
+      gap: 15px;
+      align-items: center;
+      margin-right: 10px;
+    }
+    
+    .action-icon {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      color: #fff !important;
+      text-decoration: none;
+    }
+    
+    .action-icon:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      color: #ffd700 !important;
+    }
+    
+    .cart-link {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      margin-right: 8px;
+    }
+    
+    .cart-link:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    /* Mobile Responsive - Perfect Alignment */
+    @media (max-width: 991px) {
+      .navbar-nav.mx-auto {
+        position: static;
+        transform: none;
+        text-align: center;
+        margin: 25px 0;
+        width: 100%;
+      }
+      
+      .navbar-nav.mx-auto .nav-link {
+        margin: 8px 0;
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .navbar-nav.ms-auto {
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .action-icon {
+        margin: 5px;
+        width: 45px;
+        height: 45px;
+      }
+      
+      .cart-link {
+        margin: 5px;
+        width: 45px;
+        height: 45px;
+      }
+    }
+    
+    /* Enhanced Active Page Indicator */
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 3px;
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      border-radius: 3px;
+      box-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+    }
+    
+    /* Additional Enhancements */
+    .navbar-toggler {
+      border: none;
+      padding: 4px 8px;
+    }
+    
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+    
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    
+    /* Dropdown Menu Styling */
+    .dropdown-menu {
+      background: rgba(139, 69, 19, 0.95);
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    .dropdown-item {
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    
+    .dropdown-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffd700;
+    }
+    
+    /* Form styling */
+    .form-control, .form-select {
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 12px 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--coffee-primary);
+      box-shadow: 0 0 0 0.25rem rgba(139, 69, 19, 0.25);
+    }
+    
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-cup-hot-fill me-2"></i>CoffeeShop
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Brand spacer for centering -->
+        <div class="navbar-nav flex-fill"></div>
+        
+        <!-- Main Navigation Links (Center) -->
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="menu.html">Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="services.html">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="contact.html">Contact</a>
+          </li>
+        </ul>
+        
+        <!-- Cart & Authentication (Right Corner) -->
+        <ul class="navbar-nav ms-auto">
+          <!-- Cart Icon -->
+          <li class="nav-item">
+            <a class="nav-link position-relative d-flex align-items-center cart-link" href="cart.html" title="Shopping Cart">
+              <i class="bi bi-cart3 fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count" style="display: none;">0</span>
+            </a>
+          </li>
+          
+          <!-- Login Icon -->
+          <li class="nav-item">
+            <a class="nav-link action-icon" href="login.html" title="Login">
+              <i class="bi bi-box-arrow-in-right fs-5"></i>
+            </a>
+          </li>
+          <!-- Sign Up Icon -->
+          <li class="nav-item">
+            <a class="nav-link action-icon" href="signup.html" title="Sign Up">
+              <i class="bi bi-person-plus fs-5"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Page Header -->
+    <section class="bg-coffee text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                    <h1 class="display-4 fw-bold mb-3">Contact Us</h1>
+                    <p class="lead">We'd love to hear from you. Get in touch with us today!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row">
+                <!-- Contact Form -->
+                <div class="col-lg-8" data-aos="fade-right">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-coffee text-white">
+                            <h4 class="mb-0">
+                                <i class="bi bi-envelope-fill me-2"></i>Send us a Message
+                            </h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <form id="contactForm" novalidate>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="name" class="form-label">
+                                            <i class="bi bi-person-fill me-1"></i>Your Name *
+                                        </label>
+                                        <input type="text" class="form-control" id="name" required>
+                                        <div class="invalid-feedback">
+                                            Please provide your name.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">
+                                            <i class="bi bi-envelope-fill me-1"></i>Email Address *
+                                        </label>
+                                        <input type="email" class="form-control" id="email" required>
+                                        <div class="invalid-feedback">
+                                            Please provide a valid email address.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <label for="message" class="form-label">
+                                            <i class="bi bi-chat-text-fill me-1"></i>Your Message *
+                                        </label>
+                                        <textarea class="form-control" id="message" required></textarea>
+                                        <div class="invalid-feedback">
+                                            Please provide your message.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-coffee btn-lg" id="submitContactForm">
+                                            <i class="bi bi-send-fill me-2"></i>Send Message
+                                            <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true" style="display: none;"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-lg ms-2" id="clearForm">
+                                            <i class="bi bi-arrow-clockwise me-2"></i>Clear Form
+                                        </button>
+                                        <small class="form-text text-muted mt-2 d-block">
+                                            <i class="bi bi-shield-check me-1"></i>
+                                            Your message will be sent securely.
+                                        </small>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="col-lg-4" data-aos="fade-left">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-coffee-light">
+                            <h4 class="mb-0 text-coffee">
+                                <i class="bi bi-geo-alt-fill me-2"></i>Get in Touch
+                            </h4>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="contact-info">
+                                <div class="mb-4">
+                                    <h6 class="text-coffee mb-2">
+                                        <i class="bi bi-geo-alt-fill me-2"></i>Address
+                                    </h6>
+                                    <p class="mb-0">123 Coffee Street<br>Bean City, BC 12345<br>India</p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h6 class="text-coffee mb-2">
+                                        <i class="bi bi-telephone-fill me-2"></i>Phone
+                                    </h6>
+                                    <p class="mb-0">
+                                        <a href="tel:+919876543210" class="text-decoration-none">+91 98765 43210</a>
+                                    </p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h6 class="text-coffee mb-2">
+                                        <i class="bi bi-envelope-fill me-2"></i>Email
+                                    </h6>
+                                    <p class="mb-0">
+                                        <a href="mailto:info@coffeeshop.com" class="text-decoration-none">info@coffeeshop.com</a>
+                                    </p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h6 class="text-coffee mb-2">
+                                        <i class="bi bi-clock-fill me-2"></i>Hours
+                                    </h6>
+                                    <p class="mb-1">Mon - Sun: 7:00 AM - 8:00 PM</p>
+                                    <p class="mb-1">Sat: 8:00 AM - 9:00 PM</p>
+                                    <p class="mb-0">Sun: 8:00 AM - 7:00 PM</p>
+                                </div>
+                                
+                                <div>
+                                    <h6 class="text-coffee mb-3">
+                                        <i class="bi bi-share-fill me-2"></i>Follow Us
+                                    </h6>
+                                    <div class="d-flex gap-3">
+                                        <a href="#" class="text-coffee fs-4" title="Facebook">
+                                            <i class="bi bi-facebook"></i>
+                                        </a>
+                                        <a href="#" class="text-coffee fs-4" title="Twitter">
+                                            <i class="bi bi-twitter"></i>
+                                        </a>
+                                        <a href="#" class="text-coffee fs-4" title="Instagram">
+                                            <i class="bi bi-instagram"></i>
+                                        </a>
+                                        <a href="#" class="text-coffee fs-4" title="LinkedIn">
+                                            <i class="bi bi-linkedin"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-4" data-aos="fade-up">
+                <h3 class="text-coffee mb-3">Find Us Here</h3>
+                <p class="lead">Visit our coffee shop for the full experience</p>
+            </div>
+            
+            <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="col-lg-10">
+                    <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden;">
+                        <div class="ratio ratio-21x9">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.4845394298653!2d77.20854631490183!3d28.627025582406196!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd8a88b6d2f3%3A0x9d1a5a5b5b5b5b5b!2sDelhi%2C%20India!5e0!3m2!1sen!2sus!4v1234567890123!5m2!1sen!2sus" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade"
+                                title="CoffeeShop Location">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h3 class="text-coffee mb-3">Frequently Asked Questions</h3>
+                <p class="lead">Quick answers to common questions</p>
+            </div>
+            
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq1">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                            What are your store hours?
+                        </button>
+                    </h2>
+                    <div id="collapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We're open Monday through Sunday from 7:00 AM to 8:00 PM. On Saturdays, we open earlier at 8:00 AM and close later at 9:00 PM. Sundays we open at 8:00 AM and close at 7:00 PM.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq2">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                            Do you offer delivery services?
+                        </button>
+                    </h2>
+                    <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, we partner with local delivery services to bring your favorite coffee and pastries right to your doorstep. Check our menu page for items available for delivery.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq3">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                            Can I order online for pickup?
+                        </button>
+                    </h2>
+                    <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Absolutely! You can place your order online through our website and select pickup at your preferred time. We'll have your order ready when you arrive.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq4">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                            Do you have options for people with dietary restrictions?
+                        </button>
+                    </h2>
+                    <div id="collapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Yes, we offer a variety of options for different dietary needs including lactose-free milk alternatives, gluten-free pastries, and sugar-free syrups. Please inform our staff of any allergies or restrictions.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="faq5">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5">
+                            How can I provide feedback about my experience?
+                        </button>
+                    </h2>
+                    <div id="collapse5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            We value your feedback! You can reach out to us through this contact form, email us directly at info@coffeeshop.com, or leave a review on our social media pages. We read every message and use your feedback to improve our service.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer mt-auto">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <h5 class="text-white mb-3">
+            <i class="bi bi-cup-hot-fill me-2"></i>CoffeeShop
+          </h5>
+          <p>
+            Experience the finest coffee beans from around the world. We're
+            passionate about delivering exceptional coffee experiences to
+            our customers.
+          </p>
+        </div>
+        <div class="col-lg-2 col-md-6 mb-4">
+          <h6 class="text-white mb-3">Quick Links</h6>
+          <ul class="list-unstyled">
+            <li><a href="index.html"><i class="bi bi-house me-2"></i>Home</a></li>
+            <li><a href="about.html"><i class="bi bi-info-circle me-2"></i>About</a></li>
+            <li><a href="menu.html"><i class="bi bi-cup-hot me-2"></i>Menu</a></li>
+            <li><a href="services.html"><i class="bi bi-gear me-2"></i>Services</a></li>
+            <li><a href="contact.html"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h6 class="text-white mb-3">Contact Info</h6>
+          <p>
+            <i class="bi bi-geo-alt-fill me-2 text-coffee-light"></i>123 Coffee Street, Bean
+            City
+          </p>
+          <p><i class="bi bi-telephone-fill me-2 text-coffee-light"></i>+91 98765 43210</p>
+          <p><i class="bi bi-envelope-fill me-2 text-coffee-light"></i>info@coffeeshop.com</p>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h6 class="text-white mb-3">Follow Us</h6>
+          <div class="d-flex social-links">
+            <a href="#" class="text-white" title="Facebook">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="#" class="text-white" title="Twitter">
+              <i class="bi bi-twitter"></i>
+            </a>
+            <a href="#" class="text-white" title="Instagram">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="#" class="text-white" title="LinkedIn">
+              <i class="bi bi-linkedin"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <hr class="my-4" />
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="mb-0">
+            &copy; <span id="currentYear"></span> CoffeeShop. All rights
+            reserved.
+          </p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="mb-0">
+            Made with <i class="bi bi-heart-fill text-danger"></i> for
+            coffee lovers
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" title="Back to top">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100,
+    });
+
+    // Set current year in footer
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
+
+    // Navbar scroll effect
+    window.addEventListener("scroll", function () {
+      const navbar = document.querySelector(".navbar");
+      if (window.scrollY > 50) {
+        navbar.classList.add("scrolled");
+      } else {
+        navbar.classList.remove("scrolled");
+      }
+    });
+
+    // Back to top button
+    const backToTopButton = document.getElementById("backToTop");
+
+    window.addEventListener("scroll", function () {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = "block";
+      } else {
+        backToTopButton.style.display = "none";
+      }
+    });
+
+    backToTopButton.addEventListener("click", function () {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.addEventListener("DOMContentLoaded", function () {
+      const links = document.querySelectorAll('a[href^="#"]');
+
+      links.forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const targetId = this.getAttribute("href").substring(1);
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
+
+            window.scrollTo({
+              top: offsetTop,
+              behavior: "smooth",
+            });
+          }
+        });
+      });
+      
+      // Update active nav link
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+      navLinks.forEach((link) => {
+        if (
+          link.getAttribute("href") === currentPath ||
+          (currentPath === "/" && link.getAttribute("href").includes("home"))
+        ) {
+          link.classList.add("active");
+        }
+      });
+      
+      // Load cart count on page load
+      updateCartCount();
+      
+      // Handle image loading errors globally
+      document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+          // Replace with placeholder if image fails to load
+          if (!this.dataset.errorHandled) {
+            this.dataset.errorHandled = 'true';
+            const placeholder = this.parentNode.querySelector('.placeholder-image') || 
+              this.parentNode.querySelector('.menu-img-placeholder');
+            if (placeholder) {
+              this.style.display = 'none';
+              placeholder.style.display = 'flex';
+            }
+          }
+        });
+      });
+      
+      // Enhanced footer social links
+      document.querySelectorAll('.footer .social-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          showNotification('Social media integration coming soon!', 'info');
+        });
+      });
+      
+      // Form handling
+      const contactForm = document.getElementById('contactForm');
+      const submitButton = document.getElementById('submitContactForm');
+      const clearButton = document.getElementById('clearForm');
+      
+      if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          // Simple form validation
+          let isValid = true;
+          const inputs = contactForm.querySelectorAll('input, textarea');
+          
+          inputs.forEach(input => {
+            if (input.hasAttribute('required') && !input.value.trim()) {
+              input.classList.add('is-invalid');
+              isValid = false;
+            } else {
+              input.classList.remove('is-invalid');
+            }
+            
+            if (input.type === 'email' && input.value.trim()) {
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailRegex.test(input.value.trim())) {
+                input.classList.add('is-invalid');
+                isValid = false;
+              }
+            }
+          });
+          
+          if (isValid) {
+            // Show loading spinner
+            const spinner = submitButton.querySelector('.spinner-border');
+            if (spinner) spinner.style.display = 'inline-block';
+            submitButton.disabled = true;
+            
+            // Simulate form submission
+            setTimeout(() => {
+              showNotification('Thank you for your message! We will get back to you soon.', 'success');
+              
+              // Reset form
+              contactForm.reset();
+              
+              // Hide loading spinner
+              if (spinner) spinner.style.display = 'none';
+              submitButton.disabled = false;
+            }, 1500);
+          }
+        });
+      }
+      
+      // Clear form button
+      if (clearButton) {
+        clearButton.addEventListener('click', function() {
+          contactForm.reset();
+          // Remove validation classes
+          contactForm.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+          });
+        });
+      }
+    });
+  
+  // Currency functions
+  function setCurrency(currency) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/set_currency/';
+    
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = 'csrfmiddlewaretoken';
+    csrfToken.value = 'STATIC_SITE_NO_CSRF';
+    
+    const currencyInput = document.createElement('input');
+    currencyInput.type = 'hidden';
+    currencyInput.name = 'currency';
+    currencyInput.value = currency;
+    
+    form.appendChild(csrfToken);
+    form.appendChild(currencyInput);
+    document.body.appendChild(form);
+    form.submit();
+  }
+  
+  // Cart functions
+  function updateCartCount() {
+    // Get cart count from template context or API
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+      // For static site, we'll just show a default value
+      cartCountElement.textContent = '0';
+      cartCountElement.style.display = 'none';
+    }
+  }
+      
+  // Show notification function
+  function showNotification(message, type = 'info') {
+    const alertContainer = document.querySelector('.alert-container') || 
+      (() => {
+        const container = document.createElement('div');
+        container.className = 'alert-container position-fixed';
+        container.style.cssText = 'top: 70px; right: 20px; z-index: 9999;';
+        document.body.appendChild(container);
+        return container;
+      })();
+    
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.innerHTML = `
+      <i class="bi bi-${type === 'success' ? 'check-circle-fill' : type === 'error' ? 'exclamation-triangle-fill' : 'info-circle-fill'} me-2"></i>
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    alertContainer.appendChild(alert);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      if (alert.parentNode) {
+        alert.remove();
+      }
+    }, 5000);
+  }
+  </script>
+</body>
+</html>

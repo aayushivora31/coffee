@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Discover our coffee shop services including brewing, training, catering, and equipment sales.">
+  <meta name="keywords" content="coffee services, barista training, coffee catering, coffee equipment">
+  <meta name="author" content="Coffee Shop">
+  
+  <title>Services - CoffeeShop</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/images.css">
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" />
+
+  <!-- Custom Navigation Styles -->
+  <style>
+    /* Enhanced Navigation Bar Styling */
+    .navbar {
+      background: linear-gradient(135deg, #8B4513, #6B3410);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+      padding: 0.8rem 0;
+    }
+    
+    .navbar.scrolled {
+      background: rgba(139, 69, 19, 0.95);
+      backdrop-filter: blur(15px);
+      padding: 0.5rem 0;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #fff !important;
+      transition: all 0.3s ease;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .navbar-brand:hover {
+      transform: scale(1.05);
+      color: #ffd700 !important;
+    }
+    
+    /* Perfect Center Navigation Links */
+    .navbar-nav.mx-auto {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    
+    .navbar-nav.mx-auto .nav-link {
+      color: #fff !important;
+      font-weight: 600;
+      margin: 0 8px;
+      padding: 10px 15px;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+      font-size: 1rem;
+    }
+    
+    .navbar-nav.mx-auto .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .navbar-nav.mx-auto .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    
+    /* Perfect Right Corner Action Icons */
+    .navbar-nav.ms-auto {
+      gap: 15px;
+      align-items: center;
+      margin-right: 10px;
+    }
+    
+    .action-icon {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      color: #fff !important;
+      text-decoration: none;
+    }
+    
+    .action-icon:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      color: #ffd700 !important;
+    }
+    
+    .cart-link {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      margin-right: 8px;
+    }
+    
+    .cart-link:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    /* Mobile Responsive - Perfect Alignment */
+    @media (max-width: 991px) {
+      .navbar-nav.mx-auto {
+        position: static;
+        transform: none;
+        text-align: center;
+        margin: 25px 0;
+        width: 100%;
+      }
+      
+      .navbar-nav.mx-auto .nav-link {
+        margin: 8px 0;
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .navbar-nav.ms-auto {
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
+      .action-icon {
+        margin: 5px;
+        width: 45px;
+        height: 45px;
+      }
+      
+      .cart-link {
+        margin: 5px;
+        width: 45px;
+        height: 45px;
+      }
+    }
+    
+    /* Enhanced Active Page Indicator */
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 3px;
+      background: linear-gradient(45deg, #ffd700, #ffed4e);
+      border-radius: 3px;
+      box-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+    }
+    
+    /* Additional Enhancements */
+    .navbar-toggler {
+      border: none;
+      padding: 4px 8px;
+    }
+    
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+    
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    
+    /* Dropdown Menu Styling */
+    .dropdown-menu {
+      background: rgba(139, 69, 19, 0.95);
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    .dropdown-item {
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    
+    .dropdown-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffd700;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-cup-hot-fill me-2"></i>CoffeeShop
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <!-- Brand spacer for centering -->
+        <div class="navbar-nav flex-fill"></div>
+        
+        <!-- Main Navigation Links (Center) -->
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="menu.html">Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="services.html">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">Contact</a>
+          </li>
+        </ul>
+        
+        <!-- Cart & Authentication (Right Corner) -->
+        <ul class="navbar-nav ms-auto">
+          <!-- Cart Icon -->
+          <li class="nav-item">
+            <a class="nav-link position-relative d-flex align-items-center cart-link" href="cart.html" title="Shopping Cart">
+              <i class="bi bi-cart3 fs-5"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count" style="display: none;">0</span>
+            </a>
+          </li>
+          
+          <!-- Login Icon -->
+          <li class="nav-item">
+            <a class="nav-link action-icon" href="login.html" title="Login">
+              <i class="bi bi-box-arrow-in-right fs-5"></i>
+            </a>
+          </li>
+          <!-- Sign Up Icon -->
+          <li class="nav-item">
+            <a class="nav-link action-icon" href="signup.html" title="Sign Up">
+              <i class="bi bi-person-plus fs-5"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Page Header -->
+    <section class="bg-coffee text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+                    <h1 class="display-4 fw-bold mb-3">Our Services</h1>
+                    <p class="lead">Discover all the ways we can enhance your coffee experience</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Coffee Brewing Service -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <img src="https://images.pexels.com/photos/4109743/pexels-photo-4109743.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                             class="card-img-top" alt="Coffee Brewing" style="height: 250px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-coffee">Expert Coffee Brewing</h5>
+                            <p class="card-text flex-grow-1">Our skilled baristas craft each cup with precision, using premium beans and professional techniques to deliver the perfect brew every time.</p>
+                            <div class="mt-auto">
+                                <button class="btn btn-coffee service-btn" data-service="brewing">Learn More</button>
+                                <button class="btn btn-outline-coffee ms-2 service-btn" data-service="brewing-quote">Get Quote</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coffee Bean Sales -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <img src="https://images.pexels.com/photos/4226256/pexels-photo-4226256.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                             class="card-img-top" alt="Coffee Beans" style="height: 250px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-coffee">Premium Bean Sales</h5>
+                            <p class="card-text flex-grow-1">Take home our carefully selected coffee beans. We offer a variety of single-origin and blended beans, freshly roasted to order.</p>
+                            <div class="mt-auto">
+                                <button class="btn btn-coffee service-btn" data-service="beans">Shop Beans</button>
+                                <button class="btn btn-outline-coffee ms-2 service-btn" data-service="beans-info">More Info</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coffee Training -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card h-100">
+                        <img src="https://images.pexels.com/photos/4350631/pexels-photo-4350631.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                             class="card-img-top" alt="Coffee Training" style="height: 250px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-coffee">Barista Training</h5>
+                            <p class="card-text flex-grow-1">Learn the art of coffee making from our expert baristas. We offer comprehensive training programs for beginners and professionals alike.</p>
+                            <div class="mt-auto">
+                                <button class="btn btn-coffee service-btn" data-service="training">Enroll Now</button>
+                                <button class="btn btn-outline-coffee ms-2 service-btn" data-service="training-schedule">View Schedule</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catering Services -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card h-100">
+                        <img src="https://images.pexels.com/photos/3992171/pexels-photo-3992171.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                             class="card-img-top" alt="Coffee Catering" style="height: 250px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-coffee">Event Catering</h5>
+                            <p class="card-text flex-grow-1">Make your events special with our professional coffee catering services. Perfect for corporate meetings, weddings, and private parties.</p>
+                            <div class="mt-auto">
+                                <button class="btn btn-coffee service-btn" data-service="catering">Book Catering</button>
+                                <button class="btn btn-outline-coffee ms-2 service-btn" data-service="catering-menu">View Menu</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subscription Service -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="card h-100">
+                        <img src="https://images.pexels.com/photos/4790062/pexels-photo-4790062.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                             class="card-img-top" alt="Coffee Subscription" style="height: 250px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-coffee">Coffee Subscription</h5>
+                            <p class="card-text flex-grow-1">Never run out of great coffee! Our subscription service delivers freshly roasted beans to your door on a schedule that works for you.</p>
+                            <div class="mt-auto">
+                                <button class="btn btn-coffee service-btn" data-service="subscription">Subscribe</button>
+                                <button class="btn btn-outline-coffee ms-2 service-btn" data-service="subscription-plans">View Plans</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equipment Sales -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="card h-100">
+                        <img src="https://images.pexels.com/photos/4226796/pexels-photo-4226796.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                             class="card-img-top" alt="Coffee Equipment" style="height: 250px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-coffee">Coffee Equipment</h5>
+                            <p class="card-text flex-grow-1">Upgrade your home brewing setup with our selection of professional-grade coffee equipment, from espresso machines to grinders.</p>
+                            <div class="mt-auto">
+                                <button class="btn btn-coffee service-btn" data-service="equipment">Shop Equipment</button>
+                                <button class="btn btn-outline-coffee ms-2 service-btn" data-service="equipment-guide">Buying Guide</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="section-padding bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="text-coffee mb-3">How We Work</h2>
+                <p class="lead">Our simple process ensures you get exactly what you need</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-center">
+                        <div class="bg-coffee text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <span class="fs-3 fw-bold">1</span>
+                        </div>
+                        <h5>Consultation</h5>
+                        <p>We discuss your needs and preferences to understand exactly what you're looking for.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-center">
+                        <div class="bg-coffee text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <span class="fs-3 fw-bold">2</span>
+                        </div>
+                        <h5>Customization</h5>
+                        <p>We tailor our services to meet your specific requirements and budget.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-center">
+                        <div class="bg-coffee text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <span class="fs-3 fw-bold">3</span>
+                        </div>
+                        <h5>Delivery</h5>
+                        <p>We execute our services with attention to detail and professional excellence.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="text-center">
+                        <div class="bg-coffee text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                             style="width: 80px; height: 80px;">
+                            <span class="fs-3 fw-bold">4</span>
+                        </div>
+                        <h5>Follow-up</h5>
+                        <p>We ensure your complete satisfaction and provide ongoing support when needed.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section-padding bg-coffee text-white">
+        <div class="container text-center" data-aos="zoom-in">
+            <h2 class="mb-4">Ready to Get Started?</h2>
+            <p class="lead mb-4">Let us help you discover the perfect coffee solution for your needs</p>
+            <a href="contact.html" class="btn btn-outline-light btn-lg">Contact Us Today</a>
+        </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer mt-auto">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <h5 class="text-white mb-3">
+            <i class="bi bi-cup-hot-fill me-2"></i>CoffeeShop
+          </h5>
+          <p>
+            Experience the finest coffee beans from around the world. We're
+            passionate about delivering exceptional coffee experiences to
+            our customers.
+          </p>
+        </div>
+        <div class="col-lg-2 col-md-6 mb-4">
+          <h6 class="text-white mb-3">Quick Links</h6>
+          <ul class="list-unstyled">
+            <li><a href="index.html"><i class="bi bi-house me-2"></i>Home</a></li>
+            <li><a href="about.html"><i class="bi bi-info-circle me-2"></i>About</a></li>
+            <li><a href="menu.html"><i class="bi bi-cup-hot me-2"></i>Menu</a></li>
+            <li><a href="services.html"><i class="bi bi-gear me-2"></i>Services</a></li>
+            <li><a href="contact.html"><i class="bi bi-envelope me-2"></i>Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h6 class="text-white mb-3">Contact Info</h6>
+          <p>
+            <i class="bi bi-geo-alt-fill me-2 text-coffee-light"></i>123 Coffee Street, Bean
+            City
+          </p>
+          <p><i class="bi bi-telephone-fill me-2 text-coffee-light"></i>+91 98765 43210</p>
+          <p><i class="bi bi-envelope-fill me-2 text-coffee-light"></i>info@coffeeshop.com</p>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h6 class="text-white mb-3">Follow Us</h6>
+          <div class="d-flex social-links">
+            <a href="#" class="text-white" title="Facebook">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="#" class="text-white" title="Twitter">
+              <i class="bi bi-twitter"></i>
+            </a>
+            <a href="#" class="text-white" title="Instagram">
+              <i class="bi bi-instagram"></i>
+            </a>
+            <a href="#" class="text-white" title="LinkedIn">
+              <i class="bi bi-linkedin"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <hr class="my-4" />
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <p class="mb-0">
+            &copy; <span id="currentYear"></span> CoffeeShop. All rights
+            reserved.
+          </p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="mb-0">
+            Made with <i class="bi bi-heart-fill text-danger"></i> for
+            coffee lovers
+          </p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" title="Back to top">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100,
+    });
+
+    // Set current year in footer
+    document.getElementById("currentYear").textContent =
+      new Date().getFullYear();
+
+    // Navbar scroll effect
+    window.addEventListener("scroll", function () {
+      const navbar = document.querySelector(".navbar");
+      if (window.scrollY > 50) {
+        navbar.classList.add("scrolled");
+      } else {
+        navbar.classList.remove("scrolled");
+      }
+    });
+
+    // Back to top button
+    const backToTopButton = document.getElementById("backToTop");
+
+    window.addEventListener("scroll", function () {
+      if (window.scrollY > 300) {
+        backToTopButton.style.display = "block";
+      } else {
+        backToTopButton.style.display = "none";
+      }
+    });
+
+    backToTopButton.addEventListener("click", function () {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+
+    // Smooth scrolling for anchor links
+    document.addEventListener("DOMContentLoaded", function () {
+      const links = document.querySelectorAll('a[href^="#"]');
+
+      links.forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const targetId = this.getAttribute("href").substring(1);
+          const targetElement = document.getElementById(targetId);
+
+          if (targetElement) {
+            const offsetTop = targetElement.offsetTop - 80; // Account for fixed navbar
+
+            window.scrollTo({
+              top: offsetTop,
+              behavior: "smooth",
+            });
+          }
+        });
+      });
+      
+      // Update active nav link
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+      navLinks.forEach((link) => {
+        if (
+          link.getAttribute("href") === currentPath ||
+          (currentPath === "/" && link.getAttribute("href").includes("home"))
+        ) {
+          link.classList.add("active");
+        }
+      });
+      
+      // Load cart count on page load
+      updateCartCount();
+      
+      // Handle image loading errors globally
+      document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+          // Replace with placeholder if image fails to load
+          if (!this.dataset.errorHandled) {
+            this.dataset.errorHandled = 'true';
+            const placeholder = this.parentNode.querySelector('.placeholder-image') || 
+              this.parentNode.querySelector('.menu-img-placeholder');
+            if (placeholder) {
+              this.style.display = 'none';
+              placeholder.style.display = 'flex';
+            }
+          }
+        });
+      });
+      
+      // Enhanced footer social links
+      document.querySelectorAll('.footer .social-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          showNotification('Social media integration coming soon!', 'info');
+        });
+      });
+      
+      // Service button functionality
+      document.querySelectorAll('.service-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const service = this.getAttribute('data-service');
+          showNotification(`Service "${service}" selected. Contact us for more details!`, 'success');
+        });
+      });
+    });
+  
+  // Currency functions
+  function setCurrency(currency) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/set_currency/';
+    
+    const csrfToken = document.createElement('input');
+    csrfToken.type = 'hidden';
+    csrfToken.name = 'csrfmiddlewaretoken';
+    csrfToken.value = 'STATIC_SITE_NO_CSRF';
+    
+    const currencyInput = document.createElement('input');
+    currencyInput.type = 'hidden';
+    currencyInput.name = 'currency';
+    currencyInput.value = currency;
+    
+    form.appendChild(csrfToken);
+    form.appendChild(currencyInput);
+    document.body.appendChild(form);
+    form.submit();
+  }
+  
+  // Cart functions
+  function updateCartCount() {
+    // Get cart count from template context or API
+    const cartCountElement = document.getElementById('cart-count');
+    if (cartCountElement) {
+      // For static site, we'll just show a default value
+      cartCountElement.textContent = '0';
+      cartCountElement.style.display = 'none';
+    }
+  }
+      
+  // Show notification function
+  function showNotification(message, type = 'info') {
+    const alertContainer = document.querySelector('.alert-container') || 
+      (() => {
+        const container = document.createElement('div');
+        container.className = 'alert-container position-fixed';
+        container.style.cssText = 'top: 70px; right: 20px; z-index: 9999;';
+        document.body.appendChild(container);
+        return container;
+      })();
+    
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type} alert-dismissible fade show`;
+    alert.innerHTML = `
+      <i class="bi bi-${type === 'success' ? 'check-circle-fill' : type === 'error' ? 'exclamation-triangle-fill' : 'info-circle-fill'} me-2"></i>
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    alertContainer.appendChild(alert);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      if (alert.parentNode) {
+        alert.remove();
+      }
+    }, 5000);
+  }
+  </script>
+</body>
+</html>
